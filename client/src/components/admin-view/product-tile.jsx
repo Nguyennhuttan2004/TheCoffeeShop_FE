@@ -31,10 +31,10 @@ function AdminProductTile({
                 product?.salePrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              {product?.price} VND
+              {product?.price}₫
             </span>
             {product?.salePrice > 0 ? (
-              <span className="text-lg font-bold">{product?.salePrice} VND</span>
+              <span className="text-lg font-bold">{product?.salePrice}₫</span>
             ) : null}
           </div>
           <div className="flex justify-between items-center mb-2">

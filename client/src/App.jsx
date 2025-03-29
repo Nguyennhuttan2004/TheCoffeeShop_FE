@@ -28,6 +28,14 @@ import About from "./components/shopping-view/about";
 import AdminUser from "./pages/admin-view/users";
 import ContactPage from "./components/shopping-view/contact";
 import SupportCustomer from "./pages/admin-view/supportCus";
+import AdminBlog from "./pages/admin-view/blog";
+import BlogPage from "./pages/shopping-view/blog";
+import BlogDetail from "./pages/shopping-view/blog-detail";
+import AdminChat from "./pages/admin-view/AdminChat";
+import UserChat from "./pages/shopping-view/userChat";
+import AdminVoucherPage from "./pages/admin-view/AdminVoucherPage";
+import ShopVoucherPage from "./pages/shopping-view/ShopVoucherPage";
+
 // import ShoppingOrders from "./components/shopping-view/orders";
 
 function App() {
@@ -87,6 +95,11 @@ function App() {
             <Route path="features" element={<AdminFeatures />} />
             <Route path="users" element={<AdminUser/>} />
             <Route path="supportCustomer" element={<SupportCustomer/>} />
+            <Route path="blog" element={<AdminBlog />} />
+            <Route path="chat" element={<AdminChat />} />
+            <Route path="vouchers" element={<AdminVoucherPage />} />
+
+
           </Route>
           <Route
             path="/shop"
@@ -105,6 +118,11 @@ function App() {
             <Route path="search" element={<SearchProducts />} />
             <Route path="about" element={<About />} /> 
             <Route path="contact" element={<ContactPage />} /> 
+            <Route path="blog" element={<BlogPage />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
+            <Route path="support/chat" element={<UserChat />} />
+            <Route path="voucher" element={<ShopVoucherPage />} />
+
 
           </Route>
           <Route path="*" element={<NotFound />} />

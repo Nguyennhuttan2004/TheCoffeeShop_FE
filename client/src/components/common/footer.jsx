@@ -184,6 +184,14 @@ const Footer = () => {
                   Contact
                 </a>
               </li>
+              <li>
+                <a href="/shop/blog" className="flex items-center  service">
+                  <i className="mr-2 ">
+                    <MoveRight />
+                  </i>
+                  Blog
+                </a>
+              </li>
             </ul>
           </div>
           <div className="footer_item wow animate__animated animate__fadeInUp animate__delay-1s">

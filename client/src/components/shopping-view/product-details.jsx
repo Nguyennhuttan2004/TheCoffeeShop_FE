@@ -128,11 +128,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
-              {productDetails?.price} VND
+              {productDetails?.price}₫
             </p>
             {productDetails?.salePrice > 0 ? (
               <p className="text-3xl font-bold text-red-500">
-                {productDetails?.salePrice} VND
+                {productDetails?.salePrice}₫
               </p>
             ) : null}
           </div >

@@ -70,6 +70,7 @@ function ShoppingOrders() {
               <TableHead className="py-2 text-[#A67C6D]">Order Date</TableHead>
               <TableHead className="py-2 text-[#A67C6D]">Order Status</TableHead>
               <TableHead className="py-2 text-[#A67C6D]">Order Price</TableHead>
+              <TableHead className="py-2 text-[#A67C6D]">Voucher</TableHead>
               <TableHead className="py-2 text-[#A67C6D]">Details</TableHead>
             </TableRow>
           </TableHeader>
@@ -86,19 +87,24 @@ function ShoppingOrders() {
                       className={`py-1 px-3 text-white font-bold rounded-full ${
                         orderItem?.orderStatus === "pending"
                           ? "bg-yellow-500"
-                          : orderItem?.orderStatus === "confirmed"
-                          ? "bg-green-500"
                           : orderItem?.orderStatus === "delivered"
-                          ? "bg-blue-500"
+                          ? "bg-green-700"
                           : orderItem?.orderStatus === "rejected"
                           ? "bg-red-500"
+                          : orderItem?.orderStatus === "inShipping"
+                          ? "bg-orange-500"
                           : "bg-gray-500"
                       }`}
                     >
                       {orderItem?.orderStatus}
                     </Badge>
                   </TableCell>
-                  <TableCell className="py-2">${orderItem?.totalAmount}</TableCell>
+                  <TableCell className="py-2">
+                    {orderItem?.totalAmount.toLocaleString()}₫
+                  </TableCell>
+                  <TableCell className="py-2">
+                    {orderItem?.voucherCode || "Không có"}
+                  </TableCell>
                   <TableCell className="py-2">
                     <Dialog
                       open={openDetailsDialog}
@@ -110,9 +116,9 @@ function ShoppingOrders() {
                       <Button
                         onClick={() => handleFetchOrderDetails(orderItem?._id)}
                         className="text-white font-medium px-4 py-2 rounded-md 
-                        transition-all duration-300 ease-in-out 
-                        bg-gradient-to-r from-[#A67C6D] via-[#D8CFC4] to-[#A67C6D]
-                        hover:from-[#D8CFC4] hover:to-[#A67C6D]"
+                  transition-all duration-300 ease-in-out 
+                  bg-gradient-to-r from-[#A67C6D] via-[#D8CFC4] to-[#A67C6D]
+                  hover:from-[#D8CFC4] hover:to-[#A67C6D]"
                       >
                         View Details
                       </Button>

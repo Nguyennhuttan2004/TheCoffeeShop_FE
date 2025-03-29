@@ -115,6 +115,11 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/about",
   },
   {
+    id: "blog",
+    label: "Blog",
+    path: "/shop/blog",
+  },
+  {
     id: "contact",
     label: "Contact",
     path: "/shop/contact",
@@ -1759,3 +1764,8 @@ export const addressFormControls = [
     placeholder: "Nhập ghi chú thêm (nếu có)",
   },
 ];
+
+
+
+
+// 	NGUYEN VAN A 9704 0000 0000 0018 03/07 OTP

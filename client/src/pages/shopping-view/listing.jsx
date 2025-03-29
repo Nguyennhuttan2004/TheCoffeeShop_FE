@@ -11,34 +11,29 @@ import { sortOptions } from "@/config";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFilteredProducts } from "/store/shop/products-slice";
+import { fetchAllFilteredProducts, fetchProductDetails } from "/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
-import { fetchProductDetails } from "/store/shop/products-slice";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { addToCart, fetchCartItems } from "/store/shop/cart-slice";
 import { useToast } from "@/hooks/use-toast";
-import ReactPaginate from "react-paginate"; // Import thư viện phân trang
+import ReactPaginate from "react-paginate";
 import "./../../css/pagination.css";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
-
   for (const [key, value] of Object.entries(filterParams)) {
     if (Array.isArray(value) && value.length > 0) {
       const paramValue = value.join(",");
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
-
   return queryParams.join("&");
 }
 
 function ShoppingListing() {
   const dispatch = useDispatch();
-  const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
-  );
+  const { productList, productDetails } = useSelector((state) => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,14 +44,9 @@ function ShoppingListing() {
 
   const categorySearchParam = searchParams.get("category");
 
-  // Phân trang
   const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 6; // Số sản phẩm trên mỗi trang
-
-  // Tính toán số lượng trang
+  const productsPerPage = 8;
   const pageCount = Math.ceil(productList.length / productsPerPage);
-
-  // Lấy sản phẩm cho trang hiện tại
   const displayedProducts = productList.slice(
     currentPage * productsPerPage,
     (currentPage + 1) * productsPerPage
@@ -71,19 +61,16 @@ function ShoppingListing() {
     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
 
     if (indexOfCurrentSection === -1) {
-      cpyFilters = {
-        ...cpyFilters,
-        [getSectionId]: [getCurrentOption],
-      };
+      cpyFilters = { ...cpyFilters, [getSectionId]: [getCurrentOption] };
     } else {
-      const indexOfCurrentOption =
-        cpyFilters[getSectionId].indexOf(getCurrentOption);
+      const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(getCurrentOption);
       if (indexOfCurrentOption === -1) {
         cpyFilters[getSectionId].push(getCurrentOption);
       } else {
         cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
       }
     }
+
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
@@ -95,9 +82,7 @@ function ShoppingListing() {
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
-      const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
-      );
+      const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === getCurrentProductId);
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
@@ -110,41 +95,35 @@ function ShoppingListing() {
       }
     }
 
-    dispatch(
-      addToCart({
-        userId: user?.id,
-        productId: getCurrentProductId,
-        quantity: 1,
-      })
-    ).then((data) => {
+    dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast({
-          title: "Sản phẩm đã được thêm vào giỏ hàng",
-        });
+        toast({ title: "Sản phẩm đã được thêm vào giỏ hàng" });
       }
     });
   }
 
   useEffect(() => {
-    // Lấy tất cả sản phẩm khi component được tải
-    dispatch(fetchAllFilteredProducts({ filterParams: {}, sortParams: null }));
+    const savedFilters = JSON.parse(sessionStorage.getItem("filters")) || {};
+    if (!savedFilters.category || savedFilters.category.length === 0) {
+      savedFilters.category = ["bestSeller"];
+    }
+    setFilters(savedFilters);
     setSort("price-lowtohigh");
-    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, [categorySearchParam, dispatch]);
+    const queryString = createSearchParamsHelper(savedFilters);
+    setSearchParams(new URLSearchParams(queryString));
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
-      const createQueryString = createSearchParamsHelper(filters);
-      setSearchParams(new URLSearchParams(createQueryString));
+      const queryString = createSearchParamsHelper(filters);
+      setSearchParams(new URLSearchParams(queryString));
     }
   }, [filters]);
 
   useEffect(() => {
     if (filters !== null && sort !== null) {
-      dispatch(
-        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
-      );
+      dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }));
     }
   }, [dispatch, sort, filters]);
 
@@ -164,11 +143,7 @@ function ShoppingListing() {
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <ArrowUpDownIcon className="h-4 w-4 text-[#A67C6D]" />
                   <span className="text-[#A67C6D]">Sắp xếp</span>
                 </Button>
@@ -176,10 +151,7 @@ function ShoppingListing() {
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem
-                      value={sortItem.id}
-                      key={sortItem.id}
-                    >
+                    <DropdownMenuRadioItem value={sortItem.id} key={sortItem.id}>
                       {sortItem.label}
                     </DropdownMenuRadioItem>
                   ))}
@@ -196,33 +168,31 @@ function ShoppingListing() {
                 key={productItem.id}
                 product={productItem}
                 handleAddtoCart={handleAddtoCart}
-                className="flex flex-col justify-between" 
+                className="flex flex-col justify-between"
               />
             ))
           ) : (
             <p className="text-center">Không có sản phẩm nào.</p>
           )}
         </div>
-        {/* Phân trang */}
         <div className="flex justify-center items-center mt-4 mr-40">
-        <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={(data) => setCurrentPage(data.selected)}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextClassName={"page-item"}
-          nextLinkClassName={"page-link"}
-        />
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={(data) => setCurrentPage(data.selected)}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+          />
         </div>
       </div>
 

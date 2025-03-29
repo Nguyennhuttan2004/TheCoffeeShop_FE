@@ -101,7 +101,7 @@ function UserCartItemsContent({ cartItem }) {
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
             cartItem?.quantity
           ).toFixed(2)}
-          VND
+          ₫
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}

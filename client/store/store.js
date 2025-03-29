@@ -4,7 +4,7 @@ import authReducer from "./auth-slice"
 import adminProductSlice from "./admin/products-slice/index.js"
 import adminOrderSlice from "./admin/order-slice/index.js"
 import adminUserSlice from "./admin/user-slice/index.js"
-
+import adminBlogSlice from "./admin/blog-slice/index.js"
 
 import shopProductSlice from "./shop/products-slice/index.js"
 import shopCartSlice from "./shop/cart-slice/index.js"
@@ -13,7 +13,8 @@ import shopOrderSlice from "./shop/order-slice/index.js"
 import shopSearchSlice from "./shop/search-slice/index.js";
 import shopReviewSlice from "./shop/reivew-slice/index.js";
 import commonFeatureSlice from "./common/common-slice/index.js";
-
+import adminChatSlice from "./admin/chat-slice/index.js"
+import adminVoucherSlice from "./admin/voucher-slice/index.js"
 
 const store = configureStore({
     reducer : {
@@ -21,6 +22,9 @@ const store = configureStore({
     adminProducts : adminProductSlice,
     adminOrder: adminOrderSlice,
     adminUser:adminUserSlice,
+    adminBlog: adminBlogSlice,
+    adminChat:adminChatSlice,
+    adminVoucher:adminVoucherSlice,
 
     shopProducts: shopProductSlice,
     shopCart: shopCartSlice,

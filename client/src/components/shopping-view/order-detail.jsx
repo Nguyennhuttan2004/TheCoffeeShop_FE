@@ -63,10 +63,13 @@ function ShoppingOrderDetailsView({ orderDetails }) {
             <ul className="grid gap-3">
               {orderDetails?.cartItems?.length > 0
                 ? orderDetails.cartItems.map((item, index) => (
-                    <li key={index} className="flex items-center justify-between">
+                    <li
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
-                      <span>Price: {item.price} VND</span>
+                      <span>Price: {item.price}₫</span>
                     </li>
                   ))
                 : null}
@@ -79,10 +82,22 @@ function ShoppingOrderDetailsView({ orderDetails }) {
             <div className="grid gap-0.5 text-muted-foreground">
               <span>{user?.userName}</span>
               <span>{orderDetails?.addressId?.streetAddress}</span>
-              <span>{orderDetails?.addressId?.ward}, {orderDetails?.addressId?.district}, {orderDetails?.addressId?.city}</span>
+              <span>
+                {orderDetails?.addressId?.ward},{" "}
+                {orderDetails?.addressId?.district},{" "}
+                {orderDetails?.addressId?.city}
+              </span>
               <span>{orderDetails?.addressId?.phone}</span>
               <span>{orderDetails?.addressId?.notes}</span>
             </div>
+          </div>
+        </div>
+        {/* Displaying Voucher Information */}
+        <div className="grid gap-4 mt-6">
+          <div className="grid gap-2">
+            <div className="font-medium">Voucher Code</div>
+            <Label>{orderDetails?.voucherCode || "Không có"}</Label>{" "}
+            {/* Hiển thị voucherCode */}
           </div>
         </div>
       </div>

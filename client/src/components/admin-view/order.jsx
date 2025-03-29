@@ -11,20 +11,19 @@ import {
   TableRow,
 } from "../ui/table";
 import { useDispatch, useSelector } from "react-redux";
+import { Badge } from "../ui/badge";
+import AdminOrderDetailsView from "./order-detail";
 import {
   getAllOrdersForAdmin,
   getOrderDetailsForAdmin,
   resetOrderDetails,
 } from "/store/admin/order-slice";
-import { Badge } from "../ui/badge";
-import AdminOrderDetailsView from "./order-detail";
 import ReactPaginate from "react-paginate";
 
 function AdminOrdersView() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const ordersPerPage = 5;
-  const [itemsPerPage] = useState(6);
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
@@ -69,6 +68,7 @@ function AdminOrdersView() {
               <TableHead>Order Date</TableHead>
               <TableHead>Order Status</TableHead>
               <TableHead>Order Price</TableHead>
+              <TableHead>Voucher</TableHead>
               <TableHead>Details</TableHead>
             </TableRow>
           </TableHeader>
@@ -82,8 +82,6 @@ function AdminOrdersView() {
                     className={`py-1 px-3 text-white font-semibold rounded-md ${
                       orderItem?.orderStatus === "pending"
                         ? "bg-yellow-500"
-                        : orderItem?.orderStatus === "confirmed"
-                        ? "bg-green-500"
                         : orderItem?.orderStatus === "delivered"
                         ? "bg-green-700"
                         : orderItem?.orderStatus === "rejected"
@@ -96,7 +94,17 @@ function AdminOrdersView() {
                     {orderItem?.orderStatus}
                   </Badge>
                 </TableCell>
-                <TableCell>{orderItem?.totalAmount} VND</TableCell>
+                <TableCell className="font-semibold uppercase tracking-wide">
+                  {orderItem?.totalAmount.toLocaleString()}₫
+                </TableCell>
+                <TableCell
+                  className={
+                    orderItem?.voucherCode ? "text-green-600 font-semibold uppercase" : "font-semibold uppercase text-gray-800"
+                  }
+                >
+                  {orderItem?.voucherCode || "Không có"}
+                </TableCell>
+
                 <TableCell>
                   <Dialog
                     open={openDetailsDialog}
@@ -122,28 +130,25 @@ function AdminOrdersView() {
           </TableBody>
         </Table>
 
-         {/* ✅ Thêm phân trang */}
-         <div className="flex justify-center mt-6">
-  <ReactPaginate
-    previousLabel={"← Prev"}
-    nextLabel={"Next →"}
-    pageCount={pageCount}
-    onPageChange={handlePageChange}
-    containerClassName={"flex items-center space-x-2"}
-    pageClassName={
-      "px-4 py-2 border border-[#A67C6D] text-[#A67C6D] font-medium rounded-md transition-all duration-300 hover:bg-[#A67C6D] hover:text-white"
-    }
-    activeClassName={"bg-[#A67C6D] text-white font-bold"}
-    previousClassName={
-      "px-4 py-2 border border-gray-400 text-gray-500 rounded-md transition-all duration-300 hover:bg-gray-400 hover:text-white"
-    }
-    nextClassName={
-      "px-4 py-2 border border-gray-400 text-gray-500 rounded-md transition-all duration-300 hover:bg-gray-400 hover:text-white"
-    }
-    disabledClassName={"opacity-50 cursor-not-allowed"}
-  />
-</div>
-
+        <div className="flex justify-center items-center mt-4 mr-40">
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+          />
+        </div>
       </CardContent>
     </Card>
   );

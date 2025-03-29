@@ -3,7 +3,10 @@ import {
     BookHeart,
     ChartNoAxesCombined,
     LayoutDashboard,
+    MessageSquareQuote,
+    Newspaper,
     ShoppingBasket,
+    TicketPercentIcon,
     User,
   } from "lucide-react";
   import { Fragment } from "react";
@@ -42,11 +45,30 @@ import {
       icon: <User/>
     },
     {
+      id: "blog",
+      label: "Blog",
+      path: "/admin/blog",
+      icon: <Newspaper />
+    },
+    {
       id: "support",
       label: "support customers",
       path: "/admin/supportCustomer",
       icon: <User/>
     },
+    {
+      id: "chat",
+      label: "Chat",
+      path: "/admin/chat",
+      icon: <MessageSquareQuote />
+    },
+    {
+      id: "vouchers",
+      label: "Vouchers",
+      path: "/admin/vouchers",
+      icon: <TicketPercentIcon />
+    },
+   
     
   ];
   

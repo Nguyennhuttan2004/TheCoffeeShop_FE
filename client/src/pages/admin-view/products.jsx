@@ -128,7 +128,7 @@ function AdminProducts() {
           ))}
         </div>
         <div className="flex justify-end">
-          <Button onClick={() => setOpenCreateProductsDialog(true)} className="bg-[#A67C6D] text-white">
+          <Button onClick={() => setOpenCreateProductsDialog(true)} className="btn bg-[#A67C6D] text-white">
             Add New Product
           </Button>
         </div>
@@ -169,7 +169,7 @@ function AdminProducts() {
             imageLoadingState={imageLoadingState}
             isEditMode={currentEditedId !== null}
           />
-          <div className="py-6">
+          <div className="py-6 ">
             <CommonForm
               onSubmit={onSubmit}
               formData={formData}
