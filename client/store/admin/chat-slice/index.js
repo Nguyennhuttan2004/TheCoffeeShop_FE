@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchAllChats = createAsyncThunk("chat/fetchAll", async () => {
-  const res = await axios.get("http://localhost:5000/api/chat/all");
+  const res = await axios.get("https://thecoffeeshop-server.onrender.com/api/chat/all");
   return res.data;
 });
 
 export const fetchChatById = createAsyncThunk("chat/fetchById", async (id) => {
-  const res = await axios.get(`http://localhost:5000/api/chat/thread/${id}`);
+  const res = await axios.get(`https://thecoffeeshop-server.onrender.com/api/chat/thread/${id}`);
   return res.data;
 });
 
@@ -15,7 +15,7 @@ export const sendAdminMessage = createAsyncThunk(
   "chat/sendAdminMessage",
   async ({ threadId, content }) => {
     const res = await axios.post(
-      `http://localhost:5000/api/chat/${threadId}/message`,
+  `https://thecoffeeshop-server.onrender.com/api/chat/${threadId}/message`,
       {
         sender: "admin",
         content,

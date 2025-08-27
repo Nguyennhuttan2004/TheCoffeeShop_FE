@@ -15,7 +15,7 @@ const UserChat = () => {
     if (!email) return;
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/chat/user/${encodeURIComponent(email)}`
+  `https://thecoffeeshop-server.onrender.com/api/chat/user/${encodeURIComponent(email)}`
       );
       setMessages(res.data.messages);
       setThreadId(res.data._id);
@@ -34,7 +34,7 @@ const UserChat = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5000/api/chat/start", {
+  const res = await axios.post("https://thecoffeeshop-server.onrender.com/api/chat/start", {
         userEmail: email,
         userName,
         message,
@@ -56,7 +56,7 @@ const UserChat = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/chat/${threadId}/message`,
+  `https://thecoffeeshop-server.onrender.com/api/chat/${threadId}/message`,
         {
           sender: "user",
           content: message,

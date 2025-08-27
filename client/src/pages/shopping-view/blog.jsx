@@ -11,7 +11,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/admin/blog");
+  const response = await axios.get("https://thecoffeeshop-server.onrender.com/api/admin/blog");
         if (response.data.success && Array.isArray(response.data.data)) {
           setBlogs(response.data.data);
         }

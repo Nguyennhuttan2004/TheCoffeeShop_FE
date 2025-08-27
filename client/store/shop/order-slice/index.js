@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api/shop/order";
+const API_BASE_URL = "https://thecoffeeshop-server.onrender.com/api/shop/order";
 
 const initialState = {
   approvalURL: null,
@@ -18,7 +18,7 @@ export const createNewOrder = createAsyncThunk(
     try {
       console.log("🔍 Debug Order Data:", JSON.stringify(orderData, null, 2)); // Log đầy đủ dữ liệu
 
-      const response = await axios.post("http://localhost:5000/api/shop/order/", orderData);
+  const response = await axios.post("https://thecoffeeshop-server.onrender.com/api/shop/order/", orderData);
       return response.data;
     } catch (error) {
       console.error("❌ Error creating new order:", error.response?.data || error.message);

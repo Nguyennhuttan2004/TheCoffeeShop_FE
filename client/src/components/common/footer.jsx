@@ -19,9 +19,7 @@ import {
   Upload,
   YoutubeIcon,
 } from "lucide-react";
-import {
-  shoppingViewFooterMenuItems,
-} from "@/config";
+import { shoppingViewFooterMenuItems } from "@/config";
 import { Label } from "../ui/label";
 
 const Footer = () => {
@@ -103,11 +101,19 @@ const Footer = () => {
       <div className="container">
         <div className="footer_top wow animate__animated animate__fadeInUp bg-white dark:bg-gray-800">
           <div className="footer_text">
-            <h2 className="text-[#A67C6D] dark:text-[#D8CFC4]">Subscribe To Our Newsletter</h2>
+            <h2 className="text-[#A67C6D] dark:text-[#D8CFC4]">
+              Subscribe To Our Newsletter
+            </h2>
           </div>
           <div className="footer_form">
             <form action>
-              <input type="text" name id placeholder="Your Email Address" className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" />
+              <input
+                type="text"
+                name
+                id
+                placeholder="Your Email Address"
+                className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              />
               <button className="bg-[#A67C6D] dark:bg-[#D8CFC4] text-white">
                 <i />
                 <Send />
@@ -134,13 +140,17 @@ const Footer = () => {
                 <i>
                   <PhoneIcon className="ml-2 mt-2 text-[#A67C6D]" />
                 </i>
-                <span className="text-[#B89B8D] dark:text-gray-200">1800-123-4567 </span>
+                <span className="text-[#B89B8D] dark:text-gray-200">
+                  1800-123-4567{" "}
+                </span>
               </li>
               <li>
                 <i>
                   <Mail className="ml-2 mt-2 text-[#A67C6D]" />
                 </i>
-                <span className="text-[#B89B8D] dark:text-gray-200">info@example.com</span>
+                <span className="text-[#B89B8D] dark:text-gray-200">
+                  info@example.com
+                </span>
               </li>
               <li>
                 <i>
@@ -166,10 +176,7 @@ const Footer = () => {
             <h3 className="text-[#A67C6D] dark:text-[#D8CFC4]">Our Services</h3>
             <ul className="">
               <li className="">
-                <a
-                  href="/shop/about"
-                  className=" flex items-center service"
-                >
+                <a href="/shop/about" className=" flex items-center service">
                   <i className="mr-2 ">
                     <MoveRight />
                   </i>
@@ -190,6 +197,14 @@ const Footer = () => {
                     <MoveRight />
                   </i>
                   Blog
+                </a>
+              </li>
+              <li>
+                <a href="/shop/voucher" className="flex items-center  service">
+                  <i className="mr-2 ">
+                    <MoveRight />
+                  </i>
+                  Vouchers
                 </a>
               </li>
             </ul>

@@ -22,7 +22,7 @@ function Users() {
       dispatch(setStatus("loading"));
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/admin/users",
+          "https://thecoffeeshop-server.onrender.com/api/admin/users",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -49,7 +49,7 @@ function Users() {
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
       dispatch(setStatus("loading"));
       try {
-        await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+  await axios.delete(`https://thecoffeeshop-server.onrender.com/api/admin/users/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

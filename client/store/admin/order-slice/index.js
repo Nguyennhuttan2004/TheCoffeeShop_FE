@@ -12,7 +12,7 @@ export const getAllOrdersForAdmin = createAsyncThunk(
   "/order/getAllOrdersForAdmin",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/orders/get`
+  `https://thecoffeeshop-server.onrender.com/api/admin/orders/get`
     );
 
     return response.data;
@@ -23,7 +23,7 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
   "/order/getOrderDetailsForAdmin",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/orders/details/${id}`
+  `https://thecoffeeshop-server.onrender.com/api/admin/orders/details/${id}`
     );
 
     return response.data;
@@ -35,7 +35,7 @@ export const updateOrderStatus = createAsyncThunk(
   "/order/updateOrderStatus",
   async ({ id, orderStatus }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/admin/orders/update/${id}`, {
+  const response = await axios.put(`https://thecoffeeshop-server.onrender.com/api/admin/orders/update/${id}`, {
         orderStatus,
       });
 
@@ -54,7 +54,7 @@ export const getSalesPerMonth = createAsyncThunk(
   "/order/getSalesPerMonth",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/admin/orders/sales-per-month`);
+    const response = await axios.get(`https://thecoffeeshop-server.onrender.com/api/admin/orders/sales-per-month`);
       console.log("Redux fetch sales data:", response.data); // Debug API data
       return response.data; // Đảm bảo trả về đúng cấu trúc
     } catch (error) {
@@ -67,7 +67,7 @@ export const getTotalOrders = createAsyncThunk(
   "/order/getTotalOrders",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/orders/total-orders`
+  `https://thecoffeeshop-server.onrender.com/api/admin/orders/total-orders`
     );
 
     return response.data;

@@ -49,7 +49,7 @@ const ContactPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/support",
+  "https://thecoffeeshop-server.onrender.com/api/support",
         formData
       );
       console.log("Support request sent:", response.data);

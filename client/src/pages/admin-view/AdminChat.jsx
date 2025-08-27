@@ -20,7 +20,7 @@ const AdminChat = () => {
 
   const fetchAllThreads = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/chat/all");
+  const res = await axios.get("https://thecoffeeshop-server.onrender.com/api/chat/all");
       setThreads(res.data);
     } catch (err) {
       console.error(err);
@@ -38,7 +38,7 @@ const AdminChat = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/chat/${selectedThread._id}/message`,
+  `https://thecoffeeshop-server.onrender.com/api/chat/${selectedThread._id}/message`,
         {
           sender: "admin",
           content: message,

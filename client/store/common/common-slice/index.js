@@ -14,7 +14,7 @@ export const getFeatureImages = createAsyncThunk(
   "/order/getFeatureImages",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/common/feature/get`
+  `https://thecoffeeshop-server.onrender.com/api/common/feature/get`
     );
     return response.data;
   }
@@ -24,7 +24,7 @@ export const addFeatureImage = createAsyncThunk(
   "/order/addFeatureImage",
   async (image) => {
     const response = await axios.post(
-      `http://localhost:5000/api/common/feature/add`,
+  `https://thecoffeeshop-server.onrender.com/api/common/feature/add`,
       { image }
     );
     return response.data;
@@ -34,7 +34,7 @@ export const addFeatureImage = createAsyncThunk(
 export const deleteFeatureImage = createAsyncThunk(
   'common/deleteFeatureImage',
   async (id) => {
-    const response = await axios.delete(`http://localhost:5000/api/common/feature/delete/${id}`);
+  const response = await axios.delete(`https://thecoffeeshop-server.onrender.com/api/common/feature/delete/${id}`);
     return response.data;
   }
 );
@@ -43,7 +43,7 @@ export const deleteFeatureImage = createAsyncThunk(
 export const getSupportRequests = createAsyncThunk(
   'support/getSupportRequests',
   async () => {
-    const response = await axios.get('http://localhost:5000/api/support');
+  const response = await axios.get('https://thecoffeeshop-server.onrender.com/api/support');
     return response.data;
   }
 );
@@ -51,7 +51,7 @@ export const getSupportRequests = createAsyncThunk(
 export const deleteSupportRequest = createAsyncThunk(
   'support/deleteSupportRequest',
   async (id) => {
-    await axios.delete(`http://localhost:5000/api/support/${id}`);
+  await axios.delete(`https://thecoffeeshop-server.onrender.com/api/support/${id}`);
     return id;
   }
 );
@@ -59,7 +59,7 @@ export const deleteSupportRequest = createAsyncThunk(
 export const respondToSupportRequest = createAsyncThunk(
   'support/respondToSupportRequest',
   async ({ id, response }) => {
-    const res = await axios.put(`http://localhost:5000/api/support/respond/${id}`, { response });
+  const res = await axios.put(`https://thecoffeeshop-server.onrender.com/api/support/respond/${id}`, { response });
     return res.data.data;
   }
 );

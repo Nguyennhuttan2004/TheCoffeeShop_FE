@@ -31,7 +31,7 @@ function Profile() {
     formData.append("userId", user?.id);
 
     try {
-      const response = await fetch("http://localhost:5000/api/upload-avatar", {
+  const response = await fetch("https://thecoffeeshop-server.onrender.com/api/upload-avatar", {
         method: "POST",
         body: formData,
       });

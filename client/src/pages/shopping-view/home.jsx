@@ -33,6 +33,9 @@ import KommunicateChat from "../../components/common/KommunicateChat";
 import { useTheme } from "../../context/theme-context";
 import "./../../css/toggle.css";
 import VoucherList from "../../components/shopping-view/voucherList";
+import { Helmet } from "react-helmet";
+
+
 const categories = [
   { id: "bestSeller", label: "Best Seller", icon: LucideCoffee },
   { id: "traSua", label: "Trà Sữa", icon: MilkIcon },
@@ -117,6 +120,22 @@ function ShoppingHome() {
   const isHomePage = true;
 
   return (
+    <>
+    <Helmet>
+        {/* SEO cơ bản */}
+        <title>The Coffee Shop - Cà phê nguyên chất, đậm vị Việt</title>
+        <meta name="description" content="Khám phá thế giới cà phê nguyên chất, rang xay thủ công và giao tận nơi từ The Coffee Shop." />
+        <meta name="keywords" content="cà phê, coffee, the coffee shop, cà phê nguyên chất, cafe online" />
+        <meta name="author" content="The Coffee Shop Team" />
+
+        {/* Open Graph (Facebook, Zalo...) */}
+        <meta property="og:title" content="The Coffee Shop - Cà phê nguyên chất chuẩn vị Việt" />
+        <meta property="og:description" content="Khám phá các dòng cà phê rang xay, cold brew và phụ kiện cà phê chất lượng cao." />
+        <meta property="og:image" content="https://yourdomain.com/images/og-image.jpg" />
+        <meta property="og:url" content="https://yourdomain.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="The Coffee Shop" />
+      </Helmet>
     <div
       className={`flex flex-col min-h-screen ${
         isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
@@ -429,6 +448,7 @@ function ShoppingHome() {
         <KommunicateChat />
       </div>
     </div>
+    </>
   );
 }
 

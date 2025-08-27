@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/admin/voucher";
+const API_URL = "https://thecoffeeshop-server.onrender.com/api/admin/voucher";
 
 // 🔄 Lấy danh sách voucher còn hiệu lực cho user
 export const fetchAvailableVouchers = createAsyncThunk("voucher/fetchAvailable", async () => {

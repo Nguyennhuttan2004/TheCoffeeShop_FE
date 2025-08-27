@@ -48,7 +48,7 @@ function ShoppingCheckout({ onPaymentSuccess = () => {} }) {
     if (!voucherCode) return;
 
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/voucher");
+  const res = await axios.get("https://thecoffeeshop-server.onrender.com/api/admin/voucher");
       const allVouchers = res.data.data;
 
       const found = allVouchers.find((v) => {

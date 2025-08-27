@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk(
   async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+  "https://thecoffeeshop-server.onrender.com/api/auth/register",
         formData,
         {
           withCredentials: true,
@@ -30,7 +30,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
+  "https://thecoffeeshop-server.onrender.com/api/auth/login",
       formData,
       {
         withCredentials: true,
@@ -47,7 +47,7 @@ export const logoutUser = createAsyncThunk(
 
   async () => {
     const response = await axios.post(
-      "http://localhost:5000/api/auth/logout",
+  "https://thecoffeeshop-server.onrender.com/api/auth/logout",
       {},
       {
         withCredentials: true,
@@ -63,7 +63,7 @@ export const checkAuth = createAsyncThunk(
 
   async () => {
     const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
+  "https://thecoffeeshop-server.onrender.com/api/auth/check-auth",
       {
         withCredentials: true,
         headers: {
@@ -81,7 +81,7 @@ export const getTotalUsers = createAsyncThunk(
   "/auth/total-users",
   async () => {
     const response = await axios.get(
-      "http://localhost:5000/api/auth/total-users",
+  "https://thecoffeeshop-server.onrender.com/api/auth/total-users",
       {
         withCredentials: true,
         headers: {
@@ -96,7 +96,7 @@ export const getTotalRevenue = createAsyncThunk(
   "/auth/total-revenue",
   async () => {
     const response = await axios.get(
-      "http://localhost:5000/api/admin/orders/total-revenue",
+  "https://thecoffeeshop-server.onrender.com/api/admin/orders/total-revenue",
       {
         withCredentials: true,
       }

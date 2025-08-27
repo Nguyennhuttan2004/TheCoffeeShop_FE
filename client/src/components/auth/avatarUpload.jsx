@@ -8,7 +8,7 @@ const AvatarUpload = ({ onUpload }) => {
     formData.append('avatar', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/avatar', formData, {
+  const response = await axios.post('https://thecoffeeshop-server.onrender.com/api/auth/avatar', formData, {
         withCredentials: true,
       });
       console.log(response.data);

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api/shop/address";
+const API_BASE_URL = "https://thecoffeeshop-server.onrender.com/api/shop/address";
 
 const initialState = {
   isLoading: false,
