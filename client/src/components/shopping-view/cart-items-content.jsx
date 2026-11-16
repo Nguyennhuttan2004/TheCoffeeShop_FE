@@ -11,16 +11,21 @@ function UserCartItemsContent({ cartItem }) {
     const {user} = useSelector(state => state.auth)
     const { productList} = useSelector((state) => state.shopProducts);
     const {toast} = useToast()
+    const quantity = Math.max(1, Number(cartItem?.quantity) || 1);
 
     function handleUpdateQuantity(getCartItem, typeOfAction) {
       // Tìm sản phẩm trong danh sách sản phẩm để lấy thông tin tồn kho
       const product = productList.find(product => product._id === getCartItem.productId);
-      const totalStock = product?.totalStock;
+      const totalStock = Math.max(0, Number(product?.totalStock) || 0);
   
       // Tính số lượng mới
       const newQuantity =
-        typeOfAction === "plus" ? getCartItem.quantity + 1 : getCartItem.quantity - 1;
+        typeOfAction === "plus" ? quantity + 1 : quantity - 1;
   
+      if (newQuantity < 1) {
+        return;
+      }
+
       // Kiểm tra số lượng mới có vượt quá tồn kho không
       if (newQuantity > totalStock) {
         toast({
@@ -77,13 +82,13 @@ function UserCartItemsContent({ cartItem }) {
             className="h-8 w-8 rounded-full"
             variant="outline"
             size="icon"
-            disabled = {cartItem?.quantity === 1}
+            disabled = {quantity <= 1}
             onClick={()=>handleUpdateQuantity(cartItem,'minus')}
           >
             <Minus className="w-4 h-4" />
             <span className="sr-only">Decrease</span>
           </Button>
-          <span className="font-semibold">{cartItem?.quantity}</span>
+          <span className="font-semibold">{quantity}</span>
           <Button
             className="h-8 w-8 rounded-full"
             variant="outline"
@@ -99,7 +104,7 @@ function UserCartItemsContent({ cartItem }) {
         <p className="font-semibold">
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
-            cartItem?.quantity
+            quantity
           ).toFixed(2)}
           ₫
         </p>

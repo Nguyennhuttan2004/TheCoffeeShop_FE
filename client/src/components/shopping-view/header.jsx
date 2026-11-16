@@ -23,8 +23,7 @@ import { logoutUser } from "../../../store/auth-slice";
 import UserCartWrapper from "./cart-wrapper.jsx";
 import { useEffect, useState } from "react";
 import { fetchCartItems } from "/store/shop/cart-slice";
-import { DOMAIN_BE, FOLDER_IMAGE_BE } from "@/lib/constant";
-// import { DOMAIN_BE, FOLDER_IMAGE_BE } from "@/lib/constant";
+import { getImageUrl } from "@/lib/constant";
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -126,31 +125,41 @@ function HeaderRightContent() {
         <DropdownMenuTrigger asChild>
           
         <Avatar className="">
-            {user?.avatar ? (
+          {user?.avatar ? (
               <img
-                src={`${DOMAIN_BE}${FOLDER_IMAGE_BE}${user?.avatar}`}
+                src={getImageUrl(user.avatar)}
                 alt="User Avatar"
                 className="w-full h-full rounded-full"
               />
             ) : (
               <AvatarFallback className="bg-black text-white font-extrabold">
-                {user?.userName[0].toUpperCase()}
+              {user?.userName?.[0]?.toUpperCase() || "K"}
               </AvatarFallback>
             )}
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>Tên của bạn: {user?.userName}</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {user ? `Tên của bạn: ${user.userName}` : "Bạn đang xem với tư cách khách"}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Tài khoản
-          </DropdownMenuItem>
+          {user ? (
+            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+              <UserCog className="mr-2 h-4 w-4" />
+              Tài khoản
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => navigate("/auth/login")}>
+              Đăng nhập để đặt hàng
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Đăng xuất
-          </DropdownMenuItem>
+          {user && (
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Đăng xuất
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

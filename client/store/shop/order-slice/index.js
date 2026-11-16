@@ -18,7 +18,9 @@ export const createNewOrder = createAsyncThunk(
     try {
       console.log("🔍 Debug Order Data:", JSON.stringify(orderData, null, 2)); // Log đầy đủ dữ liệu
 
-  const response = await axios.post("https://thecoffeeshop-server.onrender.com/api/shop/order/", orderData);
+  const response = await axios.post("https://thecoffeeshop-server.onrender.com/api/shop/order/", orderData, {
+    withCredentials: true,
+  });
       return response.data;
     } catch (error) {
       console.error("❌ Error creating new order:", error.response?.data || error.message);
@@ -38,6 +40,8 @@ export const capturePayment = createAsyncThunk(
         paymentId,
         payerId,
         orderId,
+      }, {
+        withCredentials: true,
       });
       return response.data;
     } catch (error) {
@@ -52,7 +56,9 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "order/getAllOrdersByUserId",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user/${userId}`);
+      const response = await axios.get(`${API_BASE_URL}/user/${userId}`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching orders by user ID:", error);
@@ -66,7 +72,9 @@ export const getOrderDetails = createAsyncThunk(
   "order/getOrderDetails",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/${id}`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching order details:", error);

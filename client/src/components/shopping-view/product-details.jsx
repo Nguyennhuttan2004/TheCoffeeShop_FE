@@ -145,7 +145,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             </span>
           </div>
           <div className="mt-5 mb-5">
-            {productDetails?.totalStock === 0 ? (
+            {Number(productDetails?.totalStock) <= 0 ? (
               <Button className="btnOOS w-full opacity-60 cursor-not-allowed">
                Hết hàng
               </Button>

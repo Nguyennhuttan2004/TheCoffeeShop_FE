@@ -33,6 +33,9 @@ function CommonForm({
                 placeholder={getControlItem.placeholder}
                 id={getControlItem.name}
                 type={getControlItem.type}
+                min={getControlItem.min}
+                max={getControlItem.max}
+                step={getControlItem.step}
                 value={value}
                 onChange={(event) =>
                   setFormData({
@@ -57,6 +60,9 @@ function CommonForm({
               placeholder={getControlItem.placeholder}
               id={getControlItem.name}
               type={getControlItem.type}
+              min={getControlItem.min}
+              max={getControlItem.max}
+              step={getControlItem.step}
               value={value}
               onChange={(event) =>
                 setFormData({

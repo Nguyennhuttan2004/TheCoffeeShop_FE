@@ -9,6 +9,7 @@ import axios from "axios";
 import { createNewOrder } from "/store/shop/order-slice";
 import { CircleDollarSign, CreditCard } from "lucide-react";
 import Slider from "@/components/shopping-view/slider";
+import { useNavigate } from "react-router-dom";
 
 function ShoppingCheckout({ onPaymentSuccess = () => {} }) {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -20,6 +21,7 @@ function ShoppingCheckout({ onPaymentSuccess = () => {} }) {
   const [voucherInfo, setVoucherInfo] = useState(null);
   const [voucherError, setVoucherError] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const rawTotal = cartItems?.items?.reduce(
@@ -136,7 +138,7 @@ function ShoppingCheckout({ onPaymentSuccess = () => {} }) {
           toast({
             title: "✅ Đơn hàng đã được tạo. Bạn sẽ thanh toán khi nhận hàng!",
           });
-          window.location.href = "/shop/payment-success";
+          navigate("/shop/payment-success");
         } else {
           toast({
             title: "❌ Không nhận được link thanh toán!",

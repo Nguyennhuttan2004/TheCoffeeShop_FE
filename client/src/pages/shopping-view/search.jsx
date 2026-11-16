@@ -26,15 +26,20 @@ function SearchProducts() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (keyword && keyword.trim() !== "" && keyword.trim().length > 3) {
-      setTimeout(() => {
-        setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
-        dispatch(getSearchResults(keyword));
-      }, 1000);
-    } else {
-      setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
+    const trimmedKeyword = keyword.trim();
+
+    setSearchParams({ keyword: trimmedKeyword });
+
+    if (!trimmedKeyword) {
       dispatch(resetSearchResults());
+      return;
     }
+
+    const searchTimeout = setTimeout(() => {
+      dispatch(getSearchResults(trimmedKeyword));
+    }, 500);
+
+    return () => clearTimeout(searchTimeout);
   }, [keyword]);
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {

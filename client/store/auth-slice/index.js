@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_BASE_URL = (
+  import.meta.env.VITE_API_URL || "https://thecoffeeshop-server.onrender.com"
+).replace(/\/+$/, "");
+
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
@@ -12,7 +16,7 @@ export const registerUser = createAsyncThunk(
   async (formData) => {
     try {
       const response = await axios.post(
-  "https://thecoffeeshop-server.onrender.com/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         formData,
         {
           withCredentials: true,
@@ -30,7 +34,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-  "https://thecoffeeshop-server.onrender.com/api/auth/login",
+      `${API_BASE_URL}/api/auth/login`,
       formData,
       {
         withCredentials: true,
@@ -47,7 +51,7 @@ export const logoutUser = createAsyncThunk(
 
   async () => {
     const response = await axios.post(
-  "https://thecoffeeshop-server.onrender.com/api/auth/logout",
+      `${API_BASE_URL}/api/auth/logout`,
       {},
       {
         withCredentials: true,
@@ -63,13 +67,9 @@ export const checkAuth = createAsyncThunk(
 
   async () => {
     const response = await axios.get(
-  "https://thecoffeeshop-server.onrender.com/api/auth/check-auth",
+      `${API_BASE_URL}/api/auth/check-auth`,
       {
         withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
       }
     );
 
@@ -81,12 +81,9 @@ export const getTotalUsers = createAsyncThunk(
   "/auth/total-users",
   async () => {
     const response = await axios.get(
-  "https://thecoffeeshop-server.onrender.com/api/auth/total-users",
+      `${API_BASE_URL}/api/auth/total-users`,
       {
         withCredentials: true,
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
       }
     );
     return response.data; // This will now include admins and regularUsers
@@ -96,7 +93,7 @@ export const getTotalRevenue = createAsyncThunk(
   "/auth/total-revenue",
   async () => {
     const response = await axios.get(
-  "https://thecoffeeshop-server.onrender.com/api/admin/orders/total-revenue",
+      `${API_BASE_URL}/api/admin/orders/total-revenue`,
       {
         withCredentials: true,
       }

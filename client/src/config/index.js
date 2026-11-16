@@ -94,6 +94,8 @@ export const addProductFormElements = [
     name: "totalStock",
     componentType: "input",
     type: "number",
+    min: 0,
+    step: 1,
     placeholder: "Nhập tổng số lượng",
   },
 ];

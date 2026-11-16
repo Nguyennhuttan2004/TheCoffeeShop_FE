@@ -42,11 +42,23 @@ function AdminProducts() {
 
   function onSubmit(e) {
     e.preventDefault();
+    const totalStock = Number(formData.totalStock);
+
+    if (!Number.isInteger(totalStock) || totalStock < 0) {
+      toast({
+        title: "Số lượng sản phẩm phải là số nguyên từ 0 trở lên",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const productData = { ...formData, totalStock };
+
     currentEditedId !== null
       ? dispatch(
         editProduct({
             id: currentEditedId,
-            formData,
+            formData: productData,
           })
         ).then((data) => {
           console.log(data, "edit");
@@ -63,7 +75,7 @@ function AdminProducts() {
         })
       : dispatch(
           addNewProduct({
-            ...formData,
+            ...productData,
             image: uploadedImageUrl,
           })
         ).then((data) => {
@@ -96,7 +108,13 @@ function AdminProducts() {
   function isFormValid() {
     return Object.keys(formData)
       .filter((currentKey) => currentKey !== "averageReview")
-      .map((key) => formData[key] !== "")
+      .map((key) => {
+        if (key === "totalStock") {
+          const stock = Number(formData[key]);
+          return Number.isInteger(stock) && stock >= 0;
+        }
+        return formData[key] !== "";
+      })
       .every((item) => item);
   }
 
@@ -104,13 +122,16 @@ function AdminProducts() {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-  const totalProducts = productList.reduce((acc, product) => acc + product.totalStock, 0);
+  const totalProducts = productList.reduce(
+    (acc, product) => acc + Math.max(0, Number(product.totalStock) || 0),
+    0
+  );
 
   const categoryTotals = productList.reduce((acc, product) => {
     if (!acc[product.category]) {
       acc[product.category] = 0;
     }
-    acc[product.category] += product.totalStock;
+    acc[product.category] += Math.max(0, Number(product.totalStock) || 0);
     return acc;
   }, {});
 

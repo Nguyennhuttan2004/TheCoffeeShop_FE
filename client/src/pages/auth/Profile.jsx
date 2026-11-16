@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { UploadCloudIcon } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import { setUser } from "../../../store/auth-slice";
-import { DOMAIN_BE, FOLDER_IMAGE_BE } from "@/lib/constant";
+import { getImageUrl } from "@/lib/constant";
 import img from "./../../assets/avatarEmpty.jpg";
 
 function Profile() {
@@ -41,10 +41,10 @@ function Profile() {
         console.log({ data });
         alert("Avatar updated successfully!");
 
-        const newAvatarUrl = data.avatar; 
+        const newAvatarUrl = data.avatar;
         console.log("New Avatar URL:", newAvatarUrl);
 
-        setAvatarPreview(img); // Update avatarPreview with the new avatar URL
+        setAvatarPreview(getImageUrl(newAvatarUrl));
         dispatch(setUser({ ...user, avatar: newAvatarUrl })); 
       } else {
         const error = await response.json();
@@ -60,7 +60,7 @@ function Profile() {
     <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
       <div className="flex flex-col items-center mb-6">
         <img
-          src={`${DOMAIN_BE}${FOLDER_IMAGE_BE}${user?.avatar}`}
+          src={getImageUrl(user?.avatar)}
           alt="Profile"
           className="w-32 h-32 rounded-full border-4 border-[#D2B79B] mb-4 object-cover"
         />

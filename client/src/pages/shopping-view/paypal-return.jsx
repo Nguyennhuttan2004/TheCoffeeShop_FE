@@ -2,11 +2,12 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { capturePayment } from "/store/shop/order-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PaypalReturnPage() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const paymentId = params.get("paymentId");
   const payerId = params.get("PayerID");
@@ -14,7 +15,7 @@ function PaypalReturnPage() {
   useEffect(() => {
     if (!paymentId || !payerId) {
       console.error("❌ Missing PayPal parameters!");
-      window.location.href = "/shop/payment-failed";
+      navigate("/shop/payment-failed");
       return;
     }
   
@@ -22,7 +23,7 @@ function PaypalReturnPage() {
   
     if (!orderId) {
       console.error("❌ Order ID not found in sessionStorage!");
-      window.location.href = "/shop/payment-failed";
+      navigate("/shop/payment-failed");
       return;
     }
   
@@ -36,17 +37,17 @@ function PaypalReturnPage() {
         if (data?.payload?.success) {
           console.log("✅ Payment Captured Successfully:", data.payload);
           sessionStorage.removeItem("currentOrderId");
-          window.location.href = "/shop/payment-success";
+          navigate("/shop/payment-success");
         } else {
           console.error("❌ Payment Capture Failed:", data.payload);
-          window.location.href = "/shop/payment-failed";
+          navigate("/shop/payment-failed");
         }
       })
       .catch((error) => {
         console.error("🚨 Capture Payment Error:", error);
-        window.location.href = "/shop/payment-failed";
+        navigate("/shop/payment-failed");
       });
-  }, [paymentId, payerId, dispatch]);
+  }, [paymentId, payerId, dispatch, navigate]);
   
 
   return (
