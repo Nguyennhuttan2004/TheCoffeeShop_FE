@@ -84,7 +84,11 @@ function App() {
           <Route
             path="/admin"
             element={
-              <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <CheckAuth
+                isAuthenticated={isAuthenticated}
+                user={user}
+                requireAuth
+              >
                 <AdminLayout />
               </CheckAuth>
             }
@@ -111,8 +115,30 @@ function App() {
           >
             <Route path="listing" element={<ShoppingListing />} />
             <Route path="home" element={<ShoppingHome />} />
-            <Route path="checkout" element={<ShoppingCheckout />} />
-            <Route path="account" element={<ShoppingAccount />} />
+            <Route
+              path="checkout"
+              element={
+                <CheckAuth
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  requireAuth
+                >
+                  <ShoppingCheckout />
+                </CheckAuth>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <CheckAuth
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  requireAuth
+                >
+                  <ShoppingAccount />
+                </CheckAuth>
+              }
+            />
             <Route path="paypal-return" element={<PaypalReturnPage />} />
             <Route path="payment-success" element={<PaymentSuccessPage />} />
             <Route path="search" element={<SearchProducts />} />
@@ -120,7 +146,18 @@ function App() {
             <Route path="contact" element={<ContactPage />} /> 
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:id" element={<BlogDetail />} />
-            <Route path="support/chat" element={<UserChat />} />
+            <Route
+              path="support/chat"
+              element={
+                <CheckAuth
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  requireAuth
+                >
+                  <UserChat />
+                </CheckAuth>
+              }
+            />
             <Route path="voucher" element={<ShopVoucherPage />} />
 
 
