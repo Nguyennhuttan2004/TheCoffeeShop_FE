@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { DOMAIN_BE } from "@/lib/constant";
+
+const API_URL = `${DOMAIN_BE}/api`;
 
 const initialState = {
   isLoading: false,
@@ -15,9 +18,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       sortBy: sortParams,
     });
 
-    const result = await axios.get(
-  `https://thecoffeeshop-server.onrender.com/api/shop/products/get?${query}`
-    );
+    const result = await axios.get(`${API_URL}/shop/products/get?${query}`);
 
     return result?.data;
   }
@@ -26,9 +27,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
 export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
-    const result = await axios.get(
-  `https://thecoffeeshop-server.onrender.com/api/shop/products/get/${id}`
-    );
+    const result = await axios.get(`${API_URL}/shop/products/get/${id}`);
 
     return result?.data;
   }
@@ -57,10 +56,15 @@ const shoppingProductSlice = createSlice({
       })
       .addCase(fetchProductDetails.pending, (state) => {
         state.isLoading = true;
+        state.productDetails = null;
       })
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.productDetails = action.payload.data;
+        const product = action.payload.data;
+        state.productDetails = product;
+        state.productList = state.productList.map((item) =>
+          item._id === product._id ? product : item
+        );
       })
       .addCase(fetchProductDetails.rejected, (state) => {
         state.isLoading = false;

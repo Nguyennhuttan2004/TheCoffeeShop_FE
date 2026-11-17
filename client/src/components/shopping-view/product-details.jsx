@@ -12,11 +12,13 @@ import StarRatingComponent from "../common/star-rating";
 import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "/store/shop/reivew-slice";
+import LoginRequiredDialog from "../common/login-required-dialog";
 
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const dispatch = useDispatch()
   const {toast} = useToast()
   const {user} = useSelector(state => state.auth)
@@ -30,6 +32,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
+
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -104,8 +111,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 
 
   return (
-    <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
+    <>
+      <Dialog open={open} onOpenChange={handleDialogClose}>
+        <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}
@@ -216,8 +224,13 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      <LoginRequiredDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+      />
+    </>
   );
 }
 

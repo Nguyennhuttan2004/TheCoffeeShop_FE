@@ -22,6 +22,11 @@ function AdminProductTile({
               Hết hàng
             </span>
           )}
+          {product?.isBestSeller && (
+            <span className="absolute top-2 right-2 bg-amber-500 text-white px-2 py-1 rounded">
+              Best Seller
+            </span>
+          )}
         </div>
         <CardContent>
           <h2 className="text-xl font-bold mb-2 mt-2">{product?.title}</h2>

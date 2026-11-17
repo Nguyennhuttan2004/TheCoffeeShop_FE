@@ -19,12 +19,14 @@ import { addToCart, fetchCartItems } from "/store/shop/cart-slice";
 import { useToast } from "@/hooks/use-toast";
 import ReactPaginate from "react-paginate";
 import "./../../css/pagination.css";
+import LoginRequiredDialog from "@/components/common/login-required-dialog";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
   for (const [key, value] of Object.entries(filterParams)) {
-    if (Array.isArray(value) && value.length > 0) {
-      const paramValue = value.join(",");
+    const values = Array.isArray(value) ? value : [value];
+    if (values.length > 0 && values.some((item) => item !== "")) {
+      const paramValue = values.filter((item) => item !== "").join(",");
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
@@ -38,11 +40,13 @@ function ShoppingListing() {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { toast } = useToast();
 
   const categorySearchParam = searchParams.get("category");
+  const bestSellerSearchParam = searchParams.get("isBestSeller");
 
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 8;
@@ -57,19 +61,17 @@ function ShoppingListing() {
   }
 
   function handleFilter(getSectionId, getCurrentOption) {
-    let cpyFilters = { ...filters };
-    const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
-
-    if (indexOfCurrentSection === -1) {
-      cpyFilters = { ...cpyFilters, [getSectionId]: [getCurrentOption] };
+    const selectedValues = new Set(filters[getSectionId] || []);
+    if (selectedValues.has(getCurrentOption)) {
+      selectedValues.delete(getCurrentOption);
     } else {
-      const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(getCurrentOption);
-      if (indexOfCurrentOption === -1) {
-        cpyFilters[getSectionId].push(getCurrentOption);
-      } else {
-        cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
-      }
+      selectedValues.add(getCurrentOption);
     }
+
+    const cpyFilters = {
+      ...filters,
+      [getSectionId]: Array.from(selectedValues),
+    };
 
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
@@ -80,6 +82,11 @@ function ShoppingListing() {
   }
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
+
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === getCurrentProductId);
@@ -104,15 +111,32 @@ function ShoppingListing() {
   }
 
   useEffect(() => {
-    const savedFilters = JSON.parse(sessionStorage.getItem("filters")) || {};
-    if (!savedFilters.category || savedFilters.category.length === 0) {
-      savedFilters.category = ["bestSeller"];
+    const hasUrlFilters =
+      categorySearchParam !== null || bestSellerSearchParam !== null;
+    const savedFilters = hasUrlFilters
+      ? {}
+      : JSON.parse(sessionStorage.getItem("filters")) || {};
+    if (categorySearchParam !== null) {
+      savedFilters.category = categorySearchParam
+        ? categorySearchParam.split(",")
+        : [];
+    } else if (!Array.isArray(savedFilters.category)) {
+      savedFilters.category = [];
     }
+
+    if (bestSellerSearchParam !== null) {
+      savedFilters.isBestSeller =
+        bestSellerSearchParam === "true" ? ["true"] : [];
+    } else if (!Array.isArray(savedFilters.isBestSeller)) {
+      savedFilters.isBestSeller = [];
+    }
+
     setFilters(savedFilters);
+    sessionStorage.setItem("filters", JSON.stringify(savedFilters));
     setSort("price-lowtohigh");
     const queryString = createSearchParamsHelper(savedFilters);
     setSearchParams(new URLSearchParams(queryString));
-  }, [categorySearchParam]);
+  }, [categorySearchParam, bestSellerSearchParam]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
@@ -128,7 +152,7 @@ function ShoppingListing() {
   }, [dispatch, sort, filters]);
 
   useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
+    setOpenDetailsDialog(Boolean(productDetails));
   }, [productDetails]);
 
   return (
@@ -200,6 +224,10 @@ function ShoppingListing() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
+      />
+      <LoginRequiredDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
       />
     </div>
   );

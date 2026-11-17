@@ -70,6 +70,9 @@ export const checkAuth = createAsyncThunk(
       `${API_BASE_URL}/api/auth/check-auth`,
       {
         withCredentials: true,
+        params: {
+          _: Date.now(),
+        },
       }
     );
 

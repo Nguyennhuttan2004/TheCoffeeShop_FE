@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { DOMAIN_BE } from "@/lib/constant";
+
+const API_URL = `${DOMAIN_BE}/api`;
 
 const initialState = {
   isLoading: false,
@@ -10,7 +13,7 @@ export const getSearchResults = createAsyncThunk(
   "/order/getSearchResults",
   async (keyword) => {
     const response = await axios.get(
-  `https://thecoffeeshop-server.onrender.com/api/shop/search/${keyword}`
+      `${API_URL}/shop/search/${encodeURIComponent(keyword)}`
     );
 
     return response.data;

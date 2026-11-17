@@ -78,6 +78,11 @@ function HeaderRightContent() {
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartItemCount =
+    cartItems?.items?.reduce(
+      (total, item) => total + (Number(item?.quantity) || 0),
+      0
+    ) || 0;
 
   function handleLogout() {
     dispatch(logoutUser()).then(() => {
@@ -105,9 +110,9 @@ function HeaderRightContent() {
           <ShoppingCart className="w-6 h-6" />
 
           {/* Badge hiển thị số lượng sản phẩm */}
-          {cartItems?.items?.length > 0 && (
+          {cartItemCount > 0 && (
             <span className="absolute top-[-5px] right-[-4px] bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold text-xs animate-bounce">
-              {cartItems.items.length}
+              {cartItemCount}
             </span>
           )}
 

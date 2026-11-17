@@ -20,6 +20,7 @@ const initialFormData = {
   title: "",
   description: "",
   category: "",
+  isBestSeller: false,
   size: "",
   price: "",
   salePrice: "",
@@ -61,8 +62,6 @@ function AdminProducts() {
             formData: productData,
           })
         ).then((data) => {
-          console.log(data, "edit");
-
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
             setFormData(initialFormData);
@@ -70,6 +69,11 @@ function AdminProducts() {
             setCurrentEditedId(null);
             toast({
               title: "Edit sản phẩm thành công",
+            });
+          } else {
+            toast({
+              title: data?.payload?.message || "Không thể cập nhật sản phẩm",
+              variant: "destructive",
             });
           }
         })
@@ -79,7 +83,6 @@ function AdminProducts() {
             image: uploadedImageUrl,
           })
         ).then((data) => {
-          console.log(data);
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
             setOpenCreateProductsDialog(false);
@@ -87,6 +90,11 @@ function AdminProducts() {
             setFormData(initialFormData);
             toast({
               title: "Thêm sản phẩm thành công",
+            });
+          } else {
+            toast({
+              title: data?.payload?.message || "Không thể thêm sản phẩm",
+              variant: "destructive",
             });
           }
         });
@@ -108,6 +116,7 @@ function AdminProducts() {
   function isFormValid() {
     return Object.keys(formData)
       .filter((currentKey) => currentKey !== "averageReview")
+      .filter((currentKey) => currentKey !== "isBestSeller")
       .map((key) => {
         if (key === "totalStock") {
           const stock = Number(formData[key]);

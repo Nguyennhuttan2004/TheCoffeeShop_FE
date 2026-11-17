@@ -58,12 +58,16 @@ export const addProductFormElements = [
     name: "category",
     componentType: "select",
     options: [
-      { id: "bestSeller", label: "Bán chạy nhất" },
       { id: "traSua", label: "Trà Sữa" },
       { id: "caPhe", label: "Cà Phê" },
       { id: "banhNgot", label: "Bánh Ngọt" },
       { id: "daXay", label: "Đá Xay" },
     ],
+  },
+  {
+    label: "Sản phẩm bán chạy",
+    name: "isBestSeller",
+    componentType: "checkbox",
   },
   {
     label: "Kích thước",
@@ -137,7 +141,7 @@ export const shoppingViewFooterMenuItems = [
   {
     id: "bestSeller",
     label: "Best Seller",
-    path: "/shop/listing?category=bestSeller",
+    path: "/shop/listing?isBestSeller=true",
   },
   {
     id: "traSua",
@@ -163,17 +167,12 @@ export const shoppingViewFooterMenuItems = [
 
 export const filterOptions = {
   category: [
-    // { id: "bestSeller", label: "Best Seller" },
     { id: "traSua", label: "Trà Sữa" },
     { id: "caPhe", label: "Cà Phê" },
     { id: "banhNgot", label: "Bánh Ngọt" },
     { id: "daXay", label: "Đá Xay" },
   ],
-  // size: [
-  //   { id: "S", label: "Size S" },
-  //   { id: "M", label: "Size M" },
-  //   { id: "L", label: "Size L" },
-  // ],
+  isBestSeller: [{ id: "true", label: "Best Seller" }],
 };
 
 export const sortOptions = [
@@ -184,11 +183,10 @@ export const sortOptions = [
 ];
 
 export const categoryOptionsMap = {
-  bestSeller: "bestSeller",
-  traSua: "traSua",
-  caPhe: "caPhe",
-  banhNgot: "banhNgot",
-  daXay: "daXay",
+  traSua: "Trà Sữa",
+  caPhe: "Cà Phê",
+  banhNgot: "Bánh Ngọt",
+  daXay: "Đá Xay",
 };
 
 export const hcmcDistricts = [

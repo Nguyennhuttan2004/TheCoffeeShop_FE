@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { DOMAIN_BE } from "@/lib/constant";
+
+const API_URL = `${DOMAIN_BE}/api`;
 
 const initialState = {
   isLoading: false,
@@ -11,7 +14,7 @@ export const addNewProduct = createAsyncThunk(
   "/products/addnewproduct",
   async (formData, { rejectWithValue }) => {
     try {
-  const result = await axios.post("https://thecoffeeshop-server.onrender.com/api/admin/products/add", formData, {
+  const result = await axios.post(`${API_URL}/admin/products/add`, formData, {
         headers: { "Content-Type": "application/json" },
       });
       return result?.data;
@@ -25,7 +28,7 @@ export const addNewProduct = createAsyncThunk(
 export const fetchAllProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async () => {
-  const result = await axios.get("https://thecoffeeshop-server.onrender.com/api/admin/products/get");
+  const result = await axios.get(`${API_URL}/admin/products/get`);
     return result?.data;
   }
 );
@@ -35,7 +38,7 @@ export const editProduct = createAsyncThunk(
   "/products/editProduct",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-  const result = await axios.put(`https://thecoffeeshop-server.onrender.com/api/admin/products/edit/${id}`, formData, {
+  const result = await axios.put(`${API_URL}/admin/products/edit/${id}`, formData, {
         headers: { "Content-Type": "application/json" },
       });
       return result?.data;
@@ -49,7 +52,7 @@ export const editProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
   async (id) => {
-  const result = await axios.delete(`https://thecoffeeshop-server.onrender.com/api/admin/products/delete/${id}`);
+  const result = await axios.delete(`${API_URL}/admin/products/delete/${id}`);
     return result?.data;
   }
 );

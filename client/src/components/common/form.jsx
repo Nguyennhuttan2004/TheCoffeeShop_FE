@@ -9,6 +9,7 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 
 function CommonForm({
   formControls,
@@ -113,6 +114,20 @@ function CommonForm({
               setFormData({
                 ...formData,
                 [getControlItem.name]: event.target.value,
+              })
+            }
+          />
+        );
+        break;
+
+      case "checkbox":
+        element = (
+          <Checkbox
+            checked={Boolean(formData[getControlItem.name])}
+            onCheckedChange={(checked) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: checked === true,
               })
             }
           />

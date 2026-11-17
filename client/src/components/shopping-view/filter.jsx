@@ -5,6 +5,11 @@ import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
 
 function ProductFilter({ filters, handleFilter }) {
+  const sectionLabels = {
+    category: "Danh mục",
+    isBestSeller: "Sản phẩm nổi bật",
+  };
+
   return (
     <div className="bg-background rounded-lg shadow-sm">
       <div className="p-5 border-b">
@@ -14,7 +19,9 @@ function ProductFilter({ filters, handleFilter }) {
         {Object.keys(filterOptions).map((keyItem) => (
           <Fragment key={keyItem}>
             <div>
-              <h3 className="text-xl font-bold text-[#A67C6D]">{keyItem}</h3>
+              <h3 className="text-xl font-bold text-[#A67C6D]">
+                {sectionLabels[keyItem] || keyItem}
+              </h3>
               <div className="grid gap-4 mt-6">
                 {filterOptions[keyItem].map((option) => (
                   <Label

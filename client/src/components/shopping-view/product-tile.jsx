@@ -31,6 +31,11 @@ function ShoppingProductTile({
               Sale
             </Badge>
           ) : null}
+          {product?.isBestSeller ? (
+            <Badge className="absolute top-2 right-2 bg-amber-500 hover:bg-amber-600">
+              Best Seller
+            </Badge>
+          ) : null}
         </div>
         <CardContent className="p-4">
           <h2 className="text-xl font-bold mb-2">{product?.title}</h2>

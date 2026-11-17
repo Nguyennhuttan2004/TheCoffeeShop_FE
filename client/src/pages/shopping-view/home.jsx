@@ -7,10 +7,11 @@ import {
   LucideCoffee,
   MilkIcon,
   Moon,
+  Star,
   Sun,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
@@ -34,14 +35,15 @@ import { useTheme } from "../../context/theme-context";
 import "./../../css/toggle.css";
 import VoucherList from "../../components/shopping-view/voucherList";
 import { Helmet } from "react-helmet";
+import LoginRequiredDialog from "@/components/common/login-required-dialog";
 
 
 const categories = [
-  { id: "bestSeller", label: "Best Seller", icon: LucideCoffee },
   { id: "traSua", label: "Trà Sữa", icon: MilkIcon },
   { id: "caPhe", label: "Cà Phê", icon: LucideCoffee },
   { id: "banhNgot", label: "Bánh Ngọt", icon: CakeSlice },
   { id: "daXay", label: "Đá Xay", icon: LucideCoffee },
+  { id: "true", filterKey: "isBestSeller", label: "Bestseller", icon: Star },
 ];
 
 function ShoppingHome() {
@@ -50,6 +52,14 @@ function ShoppingHome() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [isSaleDragging, setIsSaleDragging] = useState(false);
+  const saleProductsRef = useRef(null);
+  const saleDragRef = useRef({
+    startX: 0,
+    startScrollLeft: 0,
+    moved: false,
+  });
 
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
@@ -82,7 +92,8 @@ function ShoppingHome() {
   }, [featureImageList]);
 
   function handleNavigateToListingPage(item, section) {
-    sessionStorage.setItem("filters", JSON.stringify({ [section]: [item.id] }));
+    const filterKey = item.filterKey || section;
+    sessionStorage.setItem("filters", JSON.stringify({ [filterKey]: [item.id] }));
     navigate("/shop/listing");
   }
 
@@ -91,6 +102,11 @@ function ShoppingHome() {
   }
 
   function handleAddtoCart(productId, totalStock) {
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
+
     const items = cartItems.items || [];
     const existing = items.find((i) => i.productId === productId);
     if (existing && existing.quantity + 1 > totalStock) {
@@ -112,10 +128,49 @@ function ShoppingHome() {
   }
 
   useEffect(() => {
-    if (productDetails) setOpenDetailsDialog(true);
+    setOpenDetailsDialog(Boolean(productDetails));
   }, [productDetails]);
 
   const handleReadMore = () => navigate("/shop/about");
+
+  function handleSalePointerDown(event) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    saleDragRef.current = {
+      startX: event.clientX,
+      startScrollLeft: saleProductsRef.current.scrollLeft,
+      moved: false,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setIsSaleDragging(true);
+  }
+
+  function handleSalePointerMove(event) {
+    if (!isSaleDragging || !saleProductsRef.current) return;
+
+    const distance = event.clientX - saleDragRef.current.startX;
+    if (Math.abs(distance) > 4) {
+      saleDragRef.current.moved = true;
+    }
+    saleProductsRef.current.scrollLeft =
+      saleDragRef.current.startScrollLeft - distance;
+  }
+
+  function handleSalePointerUp(event) {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setIsSaleDragging(false);
+  }
+
+  function handleSaleCardClick(event, productId) {
+    if (saleDragRef.current.moved) {
+      event.preventDefault();
+      saleDragRef.current.moved = false;
+      return;
+    }
+    handleGetProductDetails(productId);
+  }
 
   const isHomePage = true;
 
@@ -213,6 +268,7 @@ function ShoppingHome() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((cat) => (
               <Card
+                key={cat.filterKey || cat.id}
                 onClick={() => handleNavigateToListingPage(cat, "category")}
                 className="cursor-pointer"
               >
@@ -237,7 +293,7 @@ function ShoppingHome() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList
-              .filter((item) => item.category === "bestSeller")
+              .filter((item) => item.isBestSeller === true)
               .map((product) => (
                 <ShoppingProductTile
                   key={product._id}
@@ -260,10 +316,19 @@ function ShoppingHome() {
             </span>
           </h2>
 
-          <div className="overflow-x-auto scrollbar-hide">
+          <div
+            ref={saleProductsRef}
+            className={`overflow-x-auto scrollbar-hide select-none ${
+              isSaleDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
+            onPointerDown={handleSalePointerDown}
+            onPointerMove={handleSalePointerMove}
+            onPointerUp={handleSalePointerUp}
+            onPointerCancel={handleSalePointerUp}
+          >
             <div className="flex gap-8 w-max px-4 snap-x snap-mandatory">
               {productList
-                .filter((item) => item.salePrice > 0)
+                .filter((item) => item.salePrice > 0 && !item.isBestSeller)
                 .map((product) => (
                   <div
                     key={product._id}
@@ -271,7 +336,9 @@ function ShoppingHome() {
                   >
                     <div
                       className="h-full flex flex-col bg-white dark:bg-gray-800 border rounded-2xl shadow hover:shadow-xl cursor-pointer overflow-hidden"
-                      onClick={() => handleGetProductDetails(product._id)}
+                      onClick={(event) =>
+                        handleSaleCardClick(event, product._id)
+                      }
                     >
                       <div className="relative group w-full h-[220px] overflow-hidden rounded-t-2xl">
                         <img
@@ -293,15 +360,26 @@ function ShoppingHome() {
                             {product.price.toLocaleString()}₫
                           </span>
                         </div>
-                        <Button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddtoCart(product._id, product.totalStock);
-                          }}
-                          className="btn"
-                        >
-                          Thêm sản phẩm
-                        </Button>
+                        {Number(product.totalStock) <= 0 ? (
+                          <Button className="btnOOS w-full opacity-60 cursor-not-allowed">
+                            Hết hàng
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (saleDragRef.current.moved) {
+                                e.preventDefault();
+                                saleDragRef.current.moved = false;
+                                return;
+                              }
+                              handleAddtoCart(product._id, product.totalStock);
+                            }}
+                            className="btn"
+                          >
+                            Thêm sản phẩm
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -442,6 +520,10 @@ function ShoppingHome() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
+      />
+      <LoginRequiredDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
       />
       {/* <Chatbot /> */}
       <div className="">
