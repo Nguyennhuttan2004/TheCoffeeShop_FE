@@ -3,17 +3,25 @@ import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
+import { useLanguage } from "@/context/language-context";
 
 function ProductFilter({ filters, handleFilter }) {
+  const { t } = useLanguage();
   const sectionLabels = {
-    category: "Danh mục",
-    isBestSeller: "Sản phẩm nổi bật",
+    category: t("categoriesTitle"),
+    isBestSeller: t("featureProducts"),
+  };
+  const optionLabels = {
+    traSua: t("milkTea"),
+    caPhe: t("coffee"),
+    banhNgot: t("cake"),
+    daXay: t("blended"),
   };
 
   return (
     <div className="bg-background rounded-lg shadow-sm">
       <div className="p-5 border-b">
-        <h2 className="text-xl font-extrabold text-[#A67C6D]">Bộ lọc</h2>
+        <h2 className="text-xl font-extrabold text-[#A67C6D]">{t("filter")}</h2>
       </div>
       <div className="p-4 space-y-4">
         {Object.keys(filterOptions).map((keyItem) => (
@@ -39,7 +47,7 @@ function ProductFilter({ filters, handleFilter }) {
                       }
                       onCheckedChange={() => handleFilter(keyItem, option.id)}
                     />
-                    {option.label}
+                    {optionLabels[option.id] || option.label}
                   </Label>
                 ))}
               </div>

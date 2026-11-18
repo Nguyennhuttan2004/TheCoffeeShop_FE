@@ -6,11 +6,13 @@ import {
   clearSelectedBlog,
   fetchBlogs,
 } from "/store/admin/blog-slice";
+import { useLanguage } from "@/context/language-context";
 
 const BlogDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { selectedBlog, blogs, isLoading, error } = useSelector(
     (state) => state.adminBlog
@@ -26,7 +28,7 @@ const BlogDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFF8F0] dark:bg-gray-900">
         <p className="text-lg text-gray-600 dark:text-gray-300">
-          Đang tải bài viết...
+          {t("loadingArticle")}
         </p>
       </div>
     );
@@ -35,12 +37,12 @@ const BlogDetail = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] dark:bg-gray-900">
-        <p className="text-lg text-red-500">Không tìm thấy bài viết.</p>
+        <p className="text-lg text-red-500">{t("articleNotFound")}</p>
         <button
           onClick={() => navigate(-1)}
           className="mt-4 px-4 py-2 bg-[#A67C6D] text-white rounded hover:bg-[#8b6554]"
         >
-          Quay lại
+          {t("back")}
         </button>
       </div>
     );
@@ -81,7 +83,7 @@ const BlogDetail = () => {
       {recentPosts.length > 0 && (
         <div className="max-w-6xl mx-auto mt-20 px-6">
           <h2 className="text-2xl font-semibold text-[#A67C6D] mb-6 dark:text-white">
-            Bài viết mới nhất
+            {t("latestArticles")}
           </h2>
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {recentPosts.map((post) => (
@@ -103,7 +105,7 @@ const BlogDetail = () => {
                     {post.content}
                   </p>
                   <button className="mt-4 text-[#A67C6D] dark:text-white hover:underline text-sm">
-                    Xem thêm
+                    {t("viewMore")}
                   </button>
                 </div>
               </div>

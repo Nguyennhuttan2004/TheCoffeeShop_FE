@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import ReactPaginate from "react-paginate";
 import "./../../css/pagination.css";
 import LoginRequiredDialog from "@/components/common/login-required-dialog";
+import { useLanguage } from "@/context/language-context";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -44,6 +45,7 @@ function ShoppingListing() {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const categorySearchParam = searchParams.get("category");
   const bestSellerSearchParam = searchParams.get("isBestSeller");
@@ -160,23 +162,23 @@ function ShoppingListing() {
       <Productfilter filters={filters} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-xl font-extrabold text-[#A67C6D]">Tất cả sản phẩm</h2>
+          <h2 className="text-xl font-extrabold text-[#A67C6D]">{t("allProducts")}</h2>
           <div className="flex items-center gap-3">
             <span className="text-muted-foreground text-[#A67C6D]">
-              {productList?.length} Sản phẩm
+              {productList?.length} {t("productsTitle")}
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <ArrowUpDownIcon className="h-4 w-4 text-[#A67C6D]" />
-                  <span className="text-[#A67C6D]">Sắp xếp</span>
+                  <span className="text-[#A67C6D]">{t("sort")}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
                     <DropdownMenuRadioItem value={sortItem.id} key={sortItem.id}>
-                      {sortItem.label}
+                      {sortItem.id === "price-lowtohigh" ? t("sortAsc") : t("sortDesc")}
                     </DropdownMenuRadioItem>
                   ))}
                 </DropdownMenuRadioGroup>
@@ -196,7 +198,7 @@ function ShoppingListing() {
               />
             ))
           ) : (
-            <p className="text-center">Không có sản phẩm nào.</p>
+            <p className="text-center">{t("noProducts")}</p>
           )}
         </div>
         <div className="flex justify-center items-center mt-4 mr-40">

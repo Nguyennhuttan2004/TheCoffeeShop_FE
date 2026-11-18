@@ -24,10 +24,12 @@ import UserCartWrapper from "./cart-wrapper.jsx";
 import { useEffect, useState } from "react";
 import { fetchCartItems } from "/store/shop/cart-slice";
 import { getImageUrl } from "@/lib/constant";
+import { useLanguage } from "@/context/language-context";
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t } = useLanguage();
 
   function handleNavigate(getCurrentMenuItem) {
     if (getCurrentMenuItem.id === "products") {
@@ -64,7 +66,7 @@ function MenuItems() {
           className="text-md font-bold cursor-pointer text-[#A67C6D]"
           key={menuItem.id}
         >
-          {menuItem.label}
+          {t(menuItem.id) === menuItem.id ? menuItem.label : t(menuItem.id)}
         </Label>
       ))}
     </nav>

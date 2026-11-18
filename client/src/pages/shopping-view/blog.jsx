@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useLanguage } from "@/context/language-context";
 
 const BlogPage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
@@ -40,7 +42,7 @@ const BlogPage = () => {
     <div className="bg-[#FFF8F0] dark:bg-gray-900 min-h-screen py-16 px-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-12 text-[#A67C6D] uppercase dark:text-white">
-          Blog & Tin Tức
+          {t("blogAndNews")}
         </h1>
 
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -77,18 +79,18 @@ const BlogPage = () => {
             disabled={currentPage === 1}
             className="px-4 py-2 bg-[#A67C6D] text-white rounded-full hover:bg-[#8b6554] disabled:opacity-50"
           >
-            Trang trước
+            {t("previousPage")}
           </button>
           <button
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
             className="px-4 py-2 bg-[#A67C6D] text-white rounded-full hover:bg-[#8b6554] disabled:opacity-50"
           >
-            Trang sau
+            {t("nextPage")}
           </button>
         </div>
         <p className="text-center mt-4 text-gray-500 dark:text-gray-300">
-          Trang {currentPage} / {totalPages}
+          {t("page")} {currentPage} / {totalPages}
         </p>
       </div>
     </div>

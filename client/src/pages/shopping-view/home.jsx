@@ -36,14 +36,16 @@ import "./../../css/toggle.css";
 import VoucherList from "../../components/shopping-view/voucherList";
 import { Helmet } from "react-helmet";
 import LoginRequiredDialog from "@/components/common/login-required-dialog";
+import LanguageSwitcher from "@/components/common/language-switcher";
+import { useLanguage } from "@/context/language-context";
 
 
 const categories = [
-  { id: "traSua", label: "Trà Sữa", icon: MilkIcon },
-  { id: "caPhe", label: "Cà Phê", icon: LucideCoffee },
-  { id: "banhNgot", label: "Bánh Ngọt", icon: CakeSlice },
-  { id: "daXay", label: "Đá Xay", icon: LucideCoffee },
-  { id: "true", filterKey: "isBestSeller", label: "Bestseller", icon: Star },
+  { id: "traSua", labelKey: "milkTea", icon: MilkIcon },
+  { id: "caPhe", labelKey: "coffee", icon: LucideCoffee },
+  { id: "banhNgot", labelKey: "cake", icon: CakeSlice },
+  { id: "daXay", labelKey: "blended", icon: LucideCoffee },
+  { id: "true", filterKey: "isBestSeller", labelKey: "bestSeller", icon: Star },
 ];
 
 function ShoppingHome() {
@@ -69,6 +71,7 @@ function ShoppingHome() {
   const { user } = useSelector((state) => state.auth);
   const { blogs } = useSelector((state) => state.adminBlog); // ✅ lấy blog từ store
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const { t } = useLanguage();
 
   useEffect(() => {
     dispatch(getFeatureImages());
@@ -141,12 +144,11 @@ function ShoppingHome() {
       startScrollLeft: saleProductsRef.current.scrollLeft,
       moved: false,
     };
-    event.currentTarget.setPointerCapture(event.pointerId);
     setIsSaleDragging(true);
   }
 
   function handleSalePointerMove(event) {
-    if (!isSaleDragging || !saleProductsRef.current) return;
+    if (!saleProductsRef.current || !saleDragRef.current.startX) return;
 
     const distance = event.clientX - saleDragRef.current.startX;
     if (Math.abs(distance) > 4) {
@@ -157,9 +159,6 @@ function ShoppingHome() {
   }
 
   function handleSalePointerUp(event) {
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
     setIsSaleDragging(false);
   }
 
@@ -198,26 +197,30 @@ function ShoppingHome() {
     >
       {/* Header: Dark Mode Toggle */}
       <header className="p-4 flex justify-between items-center">
-        <div className="toggle-container">
-          <input
-            type="checkbox"
-            id="switch"
-            checked={isDarkMode}
-            onChange={toggleDarkMode}
-          />
-          <label htmlFor="switch" className="toggle-label">
-            <span className="toggle-circle">
-              {isDarkMode ? (
-                <Moon color="#3e1e94" strokeWidth={2.5} />
-              ) : (
-                <Sun color="#f5b151" strokeWidth={2.5} />
-              )}
-            </span>
-            <span className="toggle-names">
-              <p className="sun"></p>
-              <p className="moon"></p>
-            </span>
-          </label>
+        <div />
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <div className="toggle-container">
+            <input
+              type="checkbox"
+              id="switch"
+              checked={isDarkMode}
+              onChange={toggleDarkMode}
+            />
+            <label htmlFor="switch" className="toggle-label">
+              <span className="toggle-circle">
+                {isDarkMode ? (
+                  <Moon color="#3e1e94" strokeWidth={2.5} />
+                ) : (
+                  <Sun color="#f5b151" strokeWidth={2.5} />
+                )}
+              </span>
+              <span className="toggle-names">
+                <p className="sun"></p>
+                <p className="moon"></p>
+              </span>
+            </label>
+          </div>
         </div>
       </header>
       {/* Slider */}
@@ -260,9 +263,9 @@ function ShoppingHome() {
       <section className="py-12 bg-gray-50  dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-9xl uppercase text-custom-gray text-center relative mb-10">
-            Danh mục
+            {t("categoriesTitle")}
             <span className="absolute italic top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-[#A67C6D] font-bold">
-              Sản phẩm
+              {t("productsTitle")}
             </span>
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -274,7 +277,7 @@ function ShoppingHome() {
               >
                 <CardContent className="flex flex-col items-center p-6">
                   <cat.icon className="w-12 h-12 text-primary mb-2" />
-                  <span className="font-bold dark:text-white">{cat.label}</span>
+                  <span className="font-bold dark:text-white">{t(cat.labelKey)}</span>
                 </CardContent>
               </Card>
             ))}
@@ -286,7 +289,7 @@ function ShoppingHome() {
       <section className="py-12 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-9xl uppercase text-custom-gray text-center relative mb-10 dark:text-white">
-            Sản phẩm
+            {t("productsTitle")}
             <span className="absolute italic top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-[#A67C6D] font-bold">
               Best seller
             </span>
@@ -310,9 +313,9 @@ function ShoppingHome() {
       <section className="py-16 bg-[#fefefe] dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-7xl md:text-9xl uppercase text-custom-gray text-center relative mb-16 dark:text-white">
-            Khuyến mãi
+            {t("promotion")}
             <span className="absolute italic top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl md:text-4xl text-[#A67C6D] font-bold">
-              Ưu đãi hot
+              {t("hotDeal")}
             </span>
           </h2>
 
@@ -360,26 +363,39 @@ function ShoppingHome() {
                             {product.price.toLocaleString()}₫
                           </span>
                         </div>
-                        {Number(product.totalStock) <= 0 ? (
-                          <Button className="btnOOS w-full opacity-60 cursor-not-allowed">
-                            Hết hàng
-                          </Button>
-                        ) : (
+                        <div className="flex gap-2">
+                          {Number(product.totalStock) <= 0 ? (
+                            <Button className="btnOOS flex-1 opacity-60 cursor-not-allowed">
+                              {t("soldOut")}
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (saleDragRef.current.moved) {
+                                  e.preventDefault();
+                                  saleDragRef.current.moved = false;
+                                  return;
+                                }
+                                handleAddtoCart(product._id, product.totalStock);
+                              }}
+                              className="btn flex-1"
+                            >
+                              {t("add")}
+                            </Button>
+                          )}
                           <Button
+                            variant="outline"
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (saleDragRef.current.moved) {
-                                e.preventDefault();
-                                saleDragRef.current.moved = false;
-                                return;
-                              }
-                              handleAddtoCart(product._id, product.totalStock);
+                              if (saleDragRef.current.moved) return;
+                              handleGetProductDetails(product._id);
                             }}
-                            className="btn"
+                            className="flex-1"
                           >
-                            Thêm sản phẩm
+                            {t("viewDetails")}
                           </Button>
-                        )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -392,14 +408,12 @@ function ShoppingHome() {
       <section className="digital py-12 dark:bg-gray-800">
         <div className="container">
           <div className="digital_title">
-            <p className="sub_title">CÀ PHÊ CỦA CHÚNG TÔI</p>
+            <p className="sub_title">{t("ourCoffee")}</p>
             <h2 className="text-6xl font-bold text-center m-10 text-[#A67C6D]">
-              TRẢI NGHIỆM CÀ PHÊ
+              {t("coffeeExperience")}
             </h2>
             <p>
-              Chúng tôi cam kết mang đến cho khách hàng dịch vụ xuất sắc trong
-              khi cung cấp cho nhân viên của chúng tôi <br />
-              đào tạo tốt nhất.
+              {t("coffeeExperienceText")}
             </p>
           </div>
           <div className="digital_content">
@@ -421,44 +435,35 @@ function ShoppingHome() {
         <div className="p-10">
           <section className="about" id="about">
             <h1 className="heading">
-              about us{" "}
-              <span className="text-[#A67C6D] font-bold">why choose us</span>
+              {t("aboutSection")}{" "}
+              <span className="text-[#A67C6D] font-bold">{t("whyChooseUs")}</span>
             </h1>
             <div className="row">
               <div className="image">
                 <img src={img1} alt="" />
               </div>
               <div className="content">
-                <h3 className="title">Mỗi tách cà phê, một câu chuyện</h3>
+                <h3 className="title">{t("aboutTitle")}</h3>
                 <p>
-                  Chào mừng bạn đến với quán cà phê của chúng tôi, nơi mang đến
-                  cho bạn những trải nghiệm tuyệt vời nhất. Tại đây, chúng tôi
-                  không chỉ phục vụ những tách cà phê thơm ngon được chế biến từ
-                  hạt cà phê chất lượng cao, mà còn tạo ra một không gian ấm
-                  cúng và thân thiện, lý tưởng cho những buổi gặp gỡ bạn bè hay
-                  những giờ phút thư giãn một mình. Với đội ngũ nhân viên nhiệt
-                  tình và chuyên nghiệp, chúng tôi cam kết mang đến cho bạn dịch
-                  vụ tốt nhất. Hãy đến và khám phá hương vị độc đáo của từng ly
-                  cà phê, cùng với những món ăn nhẹ hấp dẫn, để cảm nhận sự khác
-                  biệt mà chúng tôi mang lại!
+                  {t("aboutText")}
                 </p>
                 {isHomePage && (
                   <button onClick={handleReadMore} className="btn">
-                    Đọc thêm
+                    {t("readMore")}
                   </button>
                 )}
                 <div className="icons-container">
                   <div className="icons">
                     <img src={img2} alt="" />
-                    <h3>cà phê chất lượng</h3>
+                    <h3>{t("qualityCoffee")}</h3>
                   </div>
                   <div className="icons">
                     <img src={img3} alt="" />
-                    <h3>chi nhánh của chúng tôi</h3>
+                    <h3>{t("ourBranches")}</h3>
                   </div>
                   <div className="icons">
                     <img src={img4} alt="" />
-                    <h3>giao hàng miễn phí</h3>
+                    <h3>{t("freeDelivery")}</h3>
                   </div>
                 </div>
               </div>
@@ -471,7 +476,7 @@ function ShoppingHome() {
       <section className="py-12 bg-[#FFF8F0] dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-9xl uppercase text-custom-gray text-center relative mb-10 dark:text-white">
-            Tin tức
+            {t("news")}
             <span className="absolute italic top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-[#A67C6D] font-bold">
               Blog
             </span>
@@ -509,7 +514,7 @@ function ShoppingHome() {
               onClick={() => navigate("/shop/blog")}
               className="bg-[#A67C6D] text-white px-6 py-2 rounded-full"
             >
-              Đọc thêm bài viết
+              {t("readMoreArticles")}
             </Button>
           </div>
         </div>

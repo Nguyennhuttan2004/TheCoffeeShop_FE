@@ -50,8 +50,33 @@ const reviewSlice = createSlice({
       })
       .addCase(getReviews.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.reviews = action.payload.data;
-        state.stats = action.payload.stats || state.stats;
+        const reviews = Array.isArray(action.payload.data)
+          ? action.payload.data
+          : [];
+        const ratingBreakdown = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+        reviews.forEach((review) => {
+          const rating = Number(review.reviewValue);
+          if (rating >= 1 && rating <= 5) {
+            ratingBreakdown[rating] += 1;
+          }
+        });
+
+        const totalReviews = reviews.length;
+        const averageReview =
+          totalReviews > 0
+            ? reviews.reduce(
+                (sum, review) => sum + Number(review.reviewValue || 0),
+                0
+              ) / totalReviews
+            : 0;
+
+        state.reviews = reviews;
+        state.stats = {
+          averageReview,
+          totalReviews,
+          ratingBreakdown,
+        };
       })
       .addCase(getReviews.rejected, (state) => {
         state.isLoading = false;

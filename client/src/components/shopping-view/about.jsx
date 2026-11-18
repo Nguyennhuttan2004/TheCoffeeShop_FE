@@ -13,10 +13,12 @@ import imgPort5 from "../../assets/image/imagePortfolio/e7.png";
 import imgPort6 from "../../assets/image/imagePortfolio/e9.png";
 
 import "../../css/about.css";
+import { useLanguage } from "@/context/language-context";
 
 const About = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+  const { t } = useLanguage();
 
   const handleReadMore = () => {
     navigate(`/shop/about`);
@@ -29,44 +31,35 @@ const About = () => {
     <div className="aka">
       <section className="about dark:bg-gray-900" id="about">
         <h1 className="heading">
-          about us{" "}
-          <span className="text-[#A67C6D] font-bold">why choose us</span>
+          {t("aboutSection")}{" "}
+          <span className="text-[#A67C6D] font-bold">{t("whyChooseUs")}</span>
         </h1>
         <div className="row">
           <div className="image">
             <img src={img1} alt="" />
           </div>
           <div className="content">
-            <h3 className="title">Mỗi tách cà phê, một câu chuyện</h3>
+            <h3 className="title">{t("aboutTitle")}</h3>
             <p className="text-gray-700 dark:text-gray-300 ">
-              Chào mừng bạn đến với quán cà phê của chúng tôi, nơi mang đến cho
-              bạn những trải nghiệm tuyệt vời nhất. Tại đây, chúng tôi không chỉ
-              phục vụ những tách cà phê thơm ngon được chế biến từ hạt cà phê
-              chất lượng cao, mà còn tạo ra một không gian ấm cúng và thân
-              thiện, lý tưởng cho những buổi gặp gỡ bạn bè hay những giờ phút
-              thư giãn một mình. Với đội ngũ nhân viên nhiệt tình và chuyên
-              nghiệp, chúng tôi cam kết mang đến cho bạn dịch vụ tốt nhất. Hãy
-              đến và khám phá hương vị độc đáo của từng ly cà phê, cùng với
-              những món ăn nhẹ hấp dẫn, để cảm nhận sự khác biệt mà chúng tôi
-              mang lại!
+              {t("aboutText")}
             </p>
             {isHomePage && (
               <button onClick={handleReadMore} className="btn">
-                Đọc thêm
+                {t("readMore")}
               </button>
             )}
             <div className="icons-container">
               <div className="icons">
                 <img src={img2} alt="" />
-                <h3>cà phê chất lượng</h3>
+                <h3>{t("qualityCoffee")}</h3>
               </div>
               <div className="icons">
                 <img src={img3} alt="" />
-                <h3>chi nhánh của chúng tôi</h3>
+                <h3>{t("ourBranches")}</h3>
               </div>
               <div className="icons">
                 <img src={img4} alt="" />
-                <h3>giao hàng miễn phí</h3>
+                <h3>{t("freeDelivery")}</h3>
               </div>
             </div>
           </div>
@@ -75,11 +68,11 @@ const About = () => {
 
       <section className="menu py-10 dark:bg-gray-900" id="about">
         <h1 className="heading text-6xl font-bold text-center m-10 text-[#A67C6D]">
-          Menu
+          {t("menu")}
         </h1>
         <div className="row flex flex-col md:flex-row items-center justify-center">
           <div className="content text-center md:text-left md:w-1/2 px-4 md:px-0">
-            <h3 className="title text-2xl font-semibold ">Các Món Ngon</h3>
+            <h3 className="title text-2xl font-semibold ">{t("deliciousItems")}</h3>
             <p className="text-gray-700 dark:text-gray-300 mb-6 mr">
               Tại quán cà phê của chúng tôi, chúng tôi tự hào phục vụ nhiều loại
               đồ uống và món ăn nhẹ hấp dẫn. Dù bạn đang muốn thưởng thức một
@@ -118,7 +111,7 @@ const About = () => {
         <div className="container">
           <div className="text-center bg-light dark:bg-gray-800 p-8 rounded-lg shadow-md">
             <h1 className="heading text-4xl m-5 text-[#A67C6D] font-bold">
-              Các khuyến mãi
+              {t("promotions")}
             </h1>
           </div>
           <div className="portfolio_content">

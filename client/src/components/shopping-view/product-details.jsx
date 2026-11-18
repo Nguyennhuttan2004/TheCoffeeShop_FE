@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { addReview, getReviews } from "/store/shop/reivew-slice";
 import { getAllOrdersByUserId } from "/store/shop/order-slice";
 import LoginRequiredDialog from "../common/login-required-dialog";
+import { useLanguage } from "@/context/language-context";
 
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
@@ -27,6 +28,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const { cartItems } = useSelector((state) => state.shopCart); 
   const { reviews, stats } = useSelector((state) => state.shopReview);
   const { orderList } = useSelector((state) => state.shopOrder);
+  const { t } = useLanguage();
 
   function handleRatingChange(getRating) {
     console.log(getRating, "getRating");
@@ -99,10 +101,22 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       });
       return;
     }
+    const selectedOrderIsEligible = eligibleOrders.some(
+      (order) => String(order._id) === String(selectedOrderId)
+    );
+    if (!selectedOrderIsEligible) {
+      toast({
+        title: "Đơn hàng này không hợp lệ để đánh giá sản phẩm",
+        variant: "destructive",
+      });
+      return;
+    }
     dispatch(
       addReview({
         orderId: selectedOrderId,
         productId: productDetails?._id,
+        userId: user.id,
+        userName: user.userName,
         reviewMessage: reviewMsg,
         reviewValue: rating,
       })
@@ -184,7 +198,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           <StarRatingComponent rating={averageReview} />
           </div>
           <span className="text-muted-foreground">
-              ({averageReview.toFixed(2)} - {stats?.totalReviews || 0} đánh giá)
+              ({averageReview.toFixed(2)} - {stats?.totalReviews || 0} {t("reviewsCount")})
             </span>
           </div>
           <div className="mt-2 flex gap-2 text-sm text-muted-foreground">
@@ -197,7 +211,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           <div className="mt-5 mb-5">
             {Number(productDetails?.totalStock) <= 0 ? (
               <Button className="btnOOS w-full opacity-60 cursor-not-allowed">
-               Hết hàng
+               {t("soldOut")}
               </Button>
             ) : (
               <Button
@@ -209,13 +223,13 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                   )
                 }
               >
-                Thêm sản phẩm
+                {t("addProduct")}
               </Button>
             )}
           </div>
          <Separator/>
          <div className="max-h-[300px] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
+            <h2 className="text-xl font-bold mb-4">{t("reviews")}</h2>
             <div className="grid gap-6">
               {reviews && reviews.length > 0 ? (
                 reviews.map((reviewItem) => (
@@ -230,7 +244,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                         <h3 className="font-bold">{reviewItem?.userName}</h3>
                         {reviewItem?.orderId ? (
                           <span className="text-xs font-semibold text-green-700">
-                            Verified Purchase
+                            {t("verifiedPurchase")}
                           </span>
                         ) : null}
                       </div>
@@ -249,54 +263,60 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                   </div>
                 ))
               ) : (
-                <h1>Chưa có đánh giá nào</h1>
+                <h1>{t("noReviews")}</h1>
               )}
             </div>
             <div className="mt-10 flex-col flex gap-2">
-              <Label>Viết đánh giá</Label>
+              <Label>{t("writeReview")}</Label>
               {user ? (
                 eligibleOrders.length > 0 ? (
-                  <select
-                    className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-                    value={selectedOrderId}
-                    onChange={(event) => setSelectedOrderId(event.target.value)}
-                  >
-                    <option value="">Chọn đơn hàng đã hoàn thành</option>
-                    {eligibleOrders.map((order) => (
-                      <option key={order._id} value={order._id}>
-                        Đơn hàng #{String(order._id).slice(-8)}
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    <select
+                      className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                      value={selectedOrderId}
+                      onChange={(event) => setSelectedOrderId(event.target.value)}
+                    >
+                      <option value="">{t("selectCompletedOrder")}</option>
+                      {eligibleOrders.map((order) => (
+                        <option key={order._id} value={order._id}>
+                          {t("completedOrder")} #{String(order._id).slice(-8)}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="flex gap-1">
+                      <StarRatingComponent
+                        rating={rating}
+                        handleRatingChange={handleRatingChange}
+                      />
+                    </div>
+                    <Input
+                      name="reviewMsg"
+                      value={reviewMsg}
+                      onChange={(event) => setReviewMsg(event.target.value)}
+                      placeholder={t("reviewPlaceholder")}
+                    />
+                    <Button
+                      className="btn"
+                      onClick={handleAddReview}
+                      disabled={
+                        reviewMsg.trim() === "" ||
+                        rating < 1 ||
+                        !selectedOrderId
+                      }
+                    >
+                      {t("saveReview")}
+                    </Button>
+                  </>
                 ) : (
                   <p className="text-sm text-muted-foreground">
-                    Chỉ có thể đánh giá khi mua sản phẩm trong đơn đã hoàn thành.
+                    {t("noCompletedOrder")}
                   </p>
                 )
-              ) : null}
-              <div className="flex gap-1">
-                <StarRatingComponent
-                  rating={rating}
-                  handleRatingChange={handleRatingChange}
-                />
-              </div>
-              <Input
-                name="reviewMsg"
-                value={reviewMsg}
-                onChange={(event) => setReviewMsg(event.target.value)}
-                placeholder="Hãy viết đánh giá của bạn cho sản phẩm ..."
-              />
-              <Button
-                className="btn"
-                onClick={handleAddReview}
-                disabled={
-                  reviewMsg.trim() === "" ||
-                  rating < 1 ||
-                  (user ? eligibleOrders.length === 0 : false)
-                }
-              >
-                Lưu đánh giá
-              </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {t("loginToReview")}
+                </p>
+              )}
             </div>
           </div>
         </div>

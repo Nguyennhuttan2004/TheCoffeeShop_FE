@@ -3,12 +3,14 @@ import { Button } from "../ui/button";
 import { categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
 import "../../css/index.css"
+import { useLanguage } from "@/context/language-context";
 
 function ShoppingProductTile({
   product,
   handleGetProductDetails,
   handleAddtoCart,
 }) {
+  const { t } = useLanguage();
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div onClick={() => handleGetProductDetails(product?._id)}>
@@ -63,14 +65,14 @@ function ShoppingProductTile({
       <CardFooter>
         {Number(product?.totalStock) <= 0 ? (
           <Button className="w-full opacity-60 cursor-not-allowed btnOOS">
-            Hết hàng
+            {t("soldOut")}
           </Button>
         ) : (
           <Button
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
             className="btn w-full"
           >
-            Thêm sản phẩm
+            {t("addProduct")}
           </Button>
         )}
       </CardFooter>

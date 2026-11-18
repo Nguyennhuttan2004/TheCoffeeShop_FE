@@ -6,6 +6,7 @@ import L from "leaflet";
 import { Mail, MapPin, PhoneIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import axios from "axios";
+import { useLanguage } from "@/context/language-context";
 
 // Đặt icon cho Marker
 delete L.Icon.Default.prototype._getIconUrl;
@@ -16,6 +17,7 @@ L.Icon.Default.mergeOptions({
 });
 
 const ContactPage = () => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,14 +38,14 @@ const ContactPage = () => {
 
     // Validation dữ liệu nhập
     if (!formData.name || !formData.email || !formData.message) {
-      setErrorMessage("Tất cả các trường đều là bắt buộc!"); // Hiển thị thông báo lỗi
+      setErrorMessage(t("allFieldsRequired"));
       return;
     }
 
     // Kiểm tra định dạng email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
-      setErrorMessage("Địa chỉ email không hợp lệ!"); // Hiển thị thông báo lỗi
+      setErrorMessage(t("invalidEmail"));
       return;
     }
 
@@ -54,7 +56,7 @@ const ContactPage = () => {
       );
       console.log("Support request sent:", response.data);
       setFormData({ name: "", email: "", message: "" });
-      setSuccessMessage("Gửi yêu cầu hỗ trợ thành công!"); // Hiển thị thông báo thành công
+      setSuccessMessage(t("supportSuccess"));
       setErrorMessage(""); // Xóa thông báo lỗi nếu có
 
       // Ẩn thông báo sau 2 giây
@@ -63,7 +65,7 @@ const ContactPage = () => {
       }, 2000);
     } catch (error) {
       console.log("Error sending support request:", error);
-      setErrorMessage("Gửi yêu cầu hỗ trợ thất bại!"); // Hiển thị thông báo lỗi
+      setErrorMessage(t("supportFailed"));
       setSuccessMessage(""); // Xóa thông báo thành công nếu có
     }
   };
@@ -81,7 +83,7 @@ const ContactPage = () => {
         </div>
       )}
       <h1 className="text-5xl leading-8 text-[#A67C6D] font-bold text-center my-5 uppercase tracking-wide mb-10">
-        Contact Us
+        {t("contactUs")}
       </h1>
       <div className="mb-6">
         <MapContainer
@@ -95,14 +97,14 @@ const ContactPage = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <Marker position={position}>
-            <Popup>Đây là vị trí của bạn!</Popup>
+            <Popup>{t("locationPopup")}</Popup>
           </Marker>
         </MapContainer>
       </div>
       <div className="flex space-x-6 mt-8">
         <div className="w-1/3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <h1 className="text-3xl leading-8 text-[#A67C6D] font-bold text-center my-5 uppercase tracking-wide mb-10">
-            Thông tin liên hệ
+            {t("contactInfo")}
           </h1>
           <ul className="space-y-4">
             <li className="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -131,7 +133,7 @@ const ContactPage = () => {
             className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700"
           >
             <h2 className="leading-8 text-[#A67C6D] font-bold text-center my-5 uppercase tracking-wide mb-10 text-3xl">
-              Hỗ trợ khách hàng
+              {t("customerSupport")}
             </h2>
             {successMessage && (
               <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 p-4 rounded-lg mb-4">
@@ -145,7 +147,7 @@ const ContactPage = () => {
             )}
             <div>
               <label className="block text-gray-700 dark:text-gray-200 font-semibold">
-                Your name:
+                {t("yourName")}
               </label>
               <input
                 type="text"
@@ -171,7 +173,7 @@ const ContactPage = () => {
             </div>
             <div>
               <label className="block text-gray-700 dark:text-gray-200 font-semibold">
-                What do you need our support for?
+                {t("supportQuestion")}
               </label>
               <textarea
                 name="message"
@@ -183,7 +185,7 @@ const ContactPage = () => {
               />
             </div>
             <Button type="submit" className="btn w-full">
-              Gửi
+              {t("send")}
             </Button>
           </form>
         </div>
