@@ -151,10 +151,18 @@ function HeaderRightContent() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {user ? (
-            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-              <UserCog className="mr-2 h-4 w-4" />
-              Tài khoản
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+                <UserCog className="mr-2 h-4 w-4" />
+                Tài khoản
+              </DropdownMenuItem>
+              {user.role === "admin" && (
+                <DropdownMenuItem onClick={() => navigate("/admin/dashboard")}>
+                  <UserCog className="mr-2 h-4 w-4" />
+                  Trang quản trị
+                </DropdownMenuItem>
+              )}
+            </>
           ) : (
             <DropdownMenuItem onClick={() => navigate("/auth/login")}>
               Đăng nhập để đặt hàng

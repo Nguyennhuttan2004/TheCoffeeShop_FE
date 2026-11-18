@@ -47,14 +47,6 @@ function CheckAuth({ isAuthenticated, user, children, requireAuth = false }) {
     return <Navigate to="/unauth-page" />;
   }
 
-  if (
-    isAuthenticated &&
-    user?.role === "admin" &&
-    location.pathname.includes("shop")
-  ) {
-    return <Navigate to="/admin/dashboard" />;
-  }
-
   return <>{children}</>;
 }
 

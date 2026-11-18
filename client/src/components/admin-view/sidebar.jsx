@@ -6,6 +6,7 @@ import {
     MessageSquareQuote,
     Newspaper,
     ShoppingBasket,
+    Store,
     TicketPercentIcon,
     User,
   } from "lucide-react";
@@ -69,7 +70,15 @@ import {
       icon: <TicketPercentIcon />
     },
    
-    
+  ];
+  const adminSidebarMenuItemsWithShop = [
+    ...adminSidebarMenuItems,
+    {
+      id: "shop",
+      label: "Cửa hàng",
+      path: "/shop/home",
+      icon: <Store />,
+    },
   ];
   
   function MenuItems({ setOpen }) {
@@ -77,7 +86,7 @@ import {
   
     return (
       <nav className="mt-8 flex-col flex gap-2">
-        {adminSidebarMenuItems.map((menuItem) => (
+        {adminSidebarMenuItemsWithShop.map((menuItem) => (
           <div
             key={menuItem.id}
             onClick={() => {
