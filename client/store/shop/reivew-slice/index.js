@@ -5,17 +5,29 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   reviews: [],
+  stats: {
+    averageReview: 0,
+    totalReviews: 0,
+    ratingBreakdown: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  },
 };
 
 export const addReview = createAsyncThunk(
   "/order/addReview",
   async (formdata) => {
-    const response = await axios.post(
-  `https://thecoffeeshop-server.onrender.com/api/shop/review/add`,
-      formdata
-    );
-
-    return response.data;
+    try {
+      const response = await axios.post(
+        `https://thecoffeeshop-server.onrender.com/api/shop/review/add`,
+        formdata,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "Không thể gửi đánh giá",
+      };
+    }
   }
 );
 
@@ -39,6 +51,7 @@ const reviewSlice = createSlice({
       .addCase(getReviews.fulfilled, (state, action) => {
         state.isLoading = false;
         state.reviews = action.payload.data;
+        state.stats = action.payload.stats || state.stats;
       })
       .addCase(getReviews.rejected, (state) => {
         state.isLoading = false;
