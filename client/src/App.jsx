@@ -148,15 +148,7 @@ function App() {
             <Route path="blog/:id" element={<BlogDetail />} />
             <Route
               path="support/chat"
-              element={
-                <CheckAuth
-                  isAuthenticated={isAuthenticated}
-                  user={user}
-                  requireAuth
-                >
-                  <UserChat />
-                </CheckAuth>
-              }
+              element={<UserChat />}
             />
             <Route path="voucher" element={<ShopVoucherPage />} />
 

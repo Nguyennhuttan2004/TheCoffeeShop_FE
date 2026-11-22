@@ -30,7 +30,6 @@ import img3 from "../../assets/image/about-icon-2.png";
 import img4 from "../../assets/image/about-icon-3.png";
 import "../../css/home.css";
 import "../../css/video.css";
-import KommunicateChat from "../../components/common/KommunicateChat";
 import { useTheme } from "../../context/theme-context";
 import "./../../css/toggle.css";
 import VoucherList from "../../components/shopping-view/voucherList";
@@ -530,10 +529,6 @@ function ShoppingHome() {
         open={showLoginDialog}
         onOpenChange={setShowLoginDialog}
       />
-      {/* <Chatbot /> */}
-      <div className="">
-        <KommunicateChat />
-      </div>
     </div>
     </>
   );

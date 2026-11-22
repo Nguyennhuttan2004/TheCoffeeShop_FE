@@ -1,4 +1,4 @@
-import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import { HousePlug, LogOut, Menu, MessageCircle, ShoppingCart, UserCog } from "lucide-react";
 import {
   Link,
   useLocation,
@@ -102,6 +102,17 @@ function HeaderRightContent() {
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4 " >
+      {user && (
+        <Button
+          onClick={() => navigate("/shop/support/chat")}
+          variant="outline"
+          size="icon"
+          title="AI tư vấn đồ uống"
+        >
+          <MessageCircle className="w-6 h-6" />
+          <span className="sr-only">AI tư vấn đồ uống</span>
+        </Button>
+      )}
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => setOpenCartSheet(true)}

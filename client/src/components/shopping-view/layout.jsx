@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import ShoppingHeader from "./header";
 import Footer from "../common/footer";
+import UserChat from "../../pages/shopping-view/userChat";
 
 function ShoppingLayout() {
   return (
@@ -12,6 +13,7 @@ function ShoppingLayout() {
           <Footer />
         </main>
       </div>
+      <UserChat floating />
     </>
   );
 }
